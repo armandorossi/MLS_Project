@@ -1,0 +1,30 @@
+<resources>
+    <string name="app_name">MLS_Project</string>
+    <string name="txt_login_page">Login</string>
+    <string name="txt_username">Username:</string>
+    <string name="txt_password">Password:</string>
+    <string name="btn_login">Login</string>
+    <string name="btn_register">Register</string>
+    <string name="username_example">email@domain.com</string>
+    <string name="password_example">********</string>
+    <string name="txt_registration_page">Registration</string>
+    <string name="txt_first_name_register">First name:</string>
+    <string name="txt_last_name_register">Last name:</string>
+    <string name="txt_email_register">Email:</string>
+    <string name="txt_password_register">Password:</string>
+    <string name="txt_password_confirm_register">Confirm password:</string>
+    <string name="btn_confirm_register">Confirm</string>
+    <string name="btn_cancel_register">Cancel</string>
+    <string name="password_requirements">At least 8 characters with a combination of upper letters, numbers and symbols</string>
+    <string name="first_name_example">First name</string>
+    <string name="last_name_example">Last name</string>
+    <string name="email_example">Email</string>
+    <string name="register_password_example">Password</string>
+    <string name="confirm_password_example">Confirm password</string>
+    <string name="first_name_empty">First name cannot be empty</string>
+    <string name="last_name_empty">Last name cannot be empty</string>
+    <string name="email_empty">Email cannot be empty</string>
+    <string name="password_empty">Password cannot be empty</string>
+    <string name="password_confirm_empty">Password confirmation cannot be empty</string>
+    <string name="password_not_equal">Passwords must be equal</string>
+</resources>
