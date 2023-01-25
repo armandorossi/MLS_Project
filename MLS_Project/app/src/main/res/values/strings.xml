@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">MLS_Project</string>
+    <string name="app_name">MLS Research Project</string>
     <string name="txt_login_page">Login</string>
     <string name="txt_username">Username:</string>
     <string name="txt_password">Password:</string>
@@ -27,4 +27,26 @@
     <string name="password_empty">Password cannot be empty</string>
     <string name="password_confirm_empty">Password confirmation cannot be empty</string>
     <string name="password_not_equal">Passwords must be equal</string>
+    <string name="txt_schedule_page">Schedule</string>
+    <string name="txt_year">Year: </string>
+    <string name="txt_month">Month: </string>
+
+    <string name="txt_schedule_date">Date</string>
+    <string name="txt_f_team_name">Team one</string>
+    <string name="txt_s_team_name">Team two</string>
+    <string name="txt_schedule_time">Time</string>
+    <string name="txt_versus">vs</string>
+    <string name="txt_score_real">Score: </string>
+    <string name="txt_score_predicted">Predicted: </string>
+
+    <string name="txt_user_page">Users</string>
+    <string name="txt_user_first_name">First name: </string>
+    <string name="txt_user_status">Status: </string>
+    <string-array name="user_status_items">
+        <item>Active</item>
+        <item>Inactive</item>
+    </string-array>
+    <string name="txt_user_full_name">Full name</string>
+    <string name="txt_user_email">Email</string>
+    <string name="txt_user_admin">Admin: </string>
 </resources>

@@ -9,10 +9,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
 import com.example.mls_project.databinding.ActivityMainBinding;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -54,17 +57,29 @@ public class MainActivity extends AppCompatActivity {
     private void loginAction () {
         ConnectionSQL con = new ConnectionSQL();
         HashPassword hashPassword = new HashPassword();
-
         try {
-            if (con.loginConnection(binding.edtUsername.getText().toString(), hashPassword.hashAPassword(binding.edtPassword.getText().toString()))){
-                Toast.makeText(this, "Login succeeded", Toast.LENGTH_LONG).show();
+            String[] result = con.loginConnection(binding.edtUsername.getText().toString(), hashPassword.hashAPassword(binding.edtPassword.getText().toString())).split(";");
+//            if (con.loginConnection(binding.edtUsername.getText().toString(), hashPassword.hashAPassword(binding.edtPassword.getText().toString()))){
+            if (result[0].equals("1")) {
+                if (result[2].equals("1")){
+                    Intent userIntent = new Intent(this, UserActivity.class);
+                    userIntent.putExtra("Admin", result[2]);
+                    startActivity(userIntent);
+                    finish();
+                }
+                else {
+                    Intent scheduleIntent = new Intent(this, ScheduleActivity.class);
+                    scheduleIntent.putExtra("Admin", result[2]);
+                    startActivity(scheduleIntent);
+                    finish();
+                }
             }
             else {
-                Toast.makeText(this, "Login failed", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, result[1], Toast.LENGTH_LONG).show();
             }
         }
         catch (Exception e) {
-            Toast.makeText(this, "Login failed", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Login failed. " + e.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
 
@@ -72,19 +87,4 @@ public class MainActivity extends AppCompatActivity {
         Intent registerIntent = new Intent(this, RegisterActivity.class);
         startForResult.launch(registerIntent);
     }
-
-//    private static String hashPassword(String password) throws NoSuchAlgorithmException {
-//        MessageDigest md = MessageDigest.getInstance("SHA-512");
-//        md.reset();
-//        md.update(password.getBytes());
-//        byte[] mdArray = md.digest();
-//        StringBuilder sb = new StringBuilder(mdArray.length * 2);
-//        for(byte b : mdArray) {
-//            int v = b & 0xff;
-//            if(v < 16)
-//                sb.append('0');
-//            sb.append(Integer.toHexString(v));
-//        }
-//        return sb.toString();
-//    }
 }

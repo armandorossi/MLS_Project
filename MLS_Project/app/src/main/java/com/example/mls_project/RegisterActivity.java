@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -17,7 +18,7 @@ import java.util.regex.Pattern;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    private ActivityRegisterBinding binding;
+        private ActivityRegisterBinding binding;
     private boolean Cancel = true;
 
     @Override
@@ -75,16 +76,16 @@ public class RegisterActivity extends AppCompatActivity {
 
             try {
                 password = hashPassword.hashAPassword(binding.edtPasswordRegister.getText().toString());
-                if (con.registerConnection(firstName, lastName, email, password)){
+                if (con.registerConnection(this, firstName, lastName, email, password)){
                     Toast.makeText(this, "Registered", Toast.LENGTH_LONG).show();
                     (new Handler()).postDelayed(this::finish, 3000);
                 }
                 else {
-                    Toast.makeText(this, "Failed to register, try again", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, "Failed to register, try again.", Toast.LENGTH_LONG).show();
                 }
             }
             catch (Exception e){
-                Toast.makeText(this, "Failed to register, try again", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Failed to register, try again.", Toast.LENGTH_LONG).show();
             }
         }
     }
