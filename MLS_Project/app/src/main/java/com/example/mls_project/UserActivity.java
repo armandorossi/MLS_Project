@@ -30,12 +30,14 @@ public class UserActivity extends AppCompatActivity {
         View view = binding.getRoot();
         setContentView(view);
 
+        //Getting info about user privileges
         Bundle extras = getIntent().getExtras();
         String admin = extras.getString("Admin");
         if (admin.equals("1")){
             binding.imgSchedule.setVisibility(View.VISIBLE);
         }
 
+        //Getting user list from database
         try {
             list = con.userList(1);
         }
@@ -48,6 +50,7 @@ public class UserActivity extends AppCompatActivity {
         adapter = new UserAdapter(this, list, binding.spnStatus);
         binding.rvUserItems.setAdapter(adapter);
 
+        //Replacing user list when spinner selection changes
         binding.spnStatus.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -68,6 +71,7 @@ public class UserActivity extends AppCompatActivity {
             }
         });
 
+        //Method to open Schedule activity
         binding.imgSchedule.setOnClickListener((View v) -> {
             Intent scheduleIntent = new Intent(this, ScheduleActivity.class);
             scheduleIntent.putExtra("Admin", admin);

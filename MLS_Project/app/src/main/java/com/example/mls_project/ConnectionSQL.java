@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.StrictMode;
 import android.util.Log;
 import android.widget.Toast;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -19,6 +18,7 @@ public class ConnectionSQL {
     private static final String user = "u842004852_mlsproject_use";
     private static final String pass = "vknP=j8O&a";
 
+    //Method to create a connection and return it to other methods
     private Connection SQLConnection() {
         Connection con =  null;
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -30,27 +30,27 @@ public class ConnectionSQL {
         }
         catch (Exception e) {
             Log.e("Error", e.getMessage());
-            return con;
+            return null;
         }
     }
 
+    //Method to get a connection with the database and retrieve a specific user by username and password (encrypted)
     public String loginConnection (String username, String password) {
-//        boolean result = true;
         String result = "1;Login accepted";
         try {
             Connection con = SQLConnection();
-            PreparedStatement ps = con.prepareStatement("SELECT USER_EMAIL, USER_STATUS, USER_ADMIN FROM USERS WHERE USER_EMAIL = ? AND USER_PASSWORD = ?");
+            PreparedStatement ps = con.prepareStatement("SELECT USER_EMAIL, USER_STATUS, USER_ADMIN " +
+                    "FROM USERS " +
+                    "WHERE USER_EMAIL = ? AND USER_PASSWORD = ?");
             ps.setString(1, username);
             ps.setString(2, password);
             ResultSet rs = ps.executeQuery();
             if (rs.next()){
                 if (!rs.getString(1).equals(username)) {
                     result = "0;Username not found;";
-//                    result = false;
                 }
                 else if (rs.getInt(2) == 0) { //User deactivated
                     result = "0;Your profile is deactivated;";
-//                    result = false;
                 }
                 else {
                     result += ";" + rs.getString(3);
@@ -58,38 +58,38 @@ public class ConnectionSQL {
             }
             else {
                 result = "0;Username or password incorrect;";
-//                result = false;
             }
             con.close();
         }
         catch (Exception e) {
             result = "0;" + e.getMessage() + ";";
-//            result = false;
         }
         return result;
     }
 
+    //Method to register a new user
     public boolean registerConnection (Context context, String firstName, String lastName, String email, String password) {
         boolean result = true;
         try {
             Connection con = SQLConnection();
-            PreparedStatement ps = con.prepareStatement("INSERT INTO USERS (FIRST_NAME, LAST_NAME, USER_EMAIL, USER_PASSWORD, USER_ADMIN, USER_STATUS) VALUES (?, ?, ?, ?, ?, ?)");
+            PreparedStatement ps = con.prepareStatement("INSERT INTO USERS (FIRST_NAME, LAST_NAME, USER_EMAIL, USER_PASSWORD, USER_ADMIN, USER_STATUS) " +
+                    "VALUES (?, ?, ?, ?, ?, ?)");
             ps.setString(1, firstName);
             ps.setString(2, lastName);
             ps.setString(3, email);
             ps.setString(4, password);
-            ps.setInt(5, 0);
-            ps.setInt(6, 1);
+            ps.setInt(5, 0); //Fixed as an admin cannot be created using this application
+            ps.setInt(6, 1); //Fixed because a new user must be active
 
             int row = ps.executeUpdate();
 
-            if (row == 0) {
+            if (row == 0) { //Insert fails
                 result = false;
             }
             con.close();
         }
         catch (Exception e) {
-            if (e.getMessage().contains("Duplicate entry")) {
+            if (e.getMessage().contains("Duplicate entry")) { //Checking if the user is already registered
                 Toast.makeText(context, "Username already exists", Toast.LENGTH_LONG).show();
             }
             result = false;
@@ -97,16 +97,20 @@ public class ConnectionSQL {
         return result;
     }
 
+    //Metho to return a list of years from database
     public List<String> yearList () {
-        List<String> list = new ArrayList<String>();
+        List<String> list = new ArrayList<>();
         try {
             Connection con = SQLConnection();
-            PreparedStatement ps = con.prepareStatement("SELECT DISTINCT(YEAR(SCHEDULE_DATE)) YEAR FROM SCHEDULE ORDER BY YEAR DESC");
+            PreparedStatement ps = con.prepareStatement("SELECT DISTINCT(YEAR(SCHEDULE_DATE)) YEAR " +
+                    "FROM SCHEDULE " +
+                    "ORDER BY YEAR DESC");
 
             ResultSet rs = ps.executeQuery();
             while (rs.next()){
                 list.add(rs.getString(1));
             }
+            con.close();
         }
         catch (Exception e) {
             list = null;
@@ -115,11 +119,17 @@ public class ConnectionSQL {
         return list;
     }
 
+    //Method to return a list of games for a specific year and month
     public List<String> scheduleList (int year, int month) {
-        List<String> list = new ArrayList<String>();
+        List<String> list = new ArrayList<>();
         try {
             Connection con = SQLConnection();
-            PreparedStatement ps = con.prepareStatement("SELECT S.*, T1.TEAM_NAME, T2.TEAM_NAME FROM SCHEDULE S INNER JOIN TEAMS T1 ON S.F_TEAM_NAME = T1.TEAM_SHORT_NAME INNER JOIN TEAMS T2 ON S.S_TEAM_NAME = T2.TEAM_SHORT_NAME WHERE YEAR(SCHEDULE_DATE) = ? AND MONTH(SCHEDULE_DATE) = ? ORDER BY SCHEDULE_DATE, SCHEDULE_TIME");
+            PreparedStatement ps = con.prepareStatement("SELECT S.*, T1.TEAM_NAME, T2.TEAM_NAME " +
+                    "FROM SCHEDULE S " +
+                    "INNER JOIN TEAMS T1 ON S.F_TEAM_NAME = T1.TEAM_SHORT_NAME " +
+                    "INNER JOIN TEAMS T2 ON S.S_TEAM_NAME = T2.TEAM_SHORT_NAME " +
+                    "WHERE YEAR(SCHEDULE_DATE) = ? AND MONTH(SCHEDULE_DATE) = ? " +
+                    "ORDER BY SCHEDULE_DATE, SCHEDULE_TIME");
             ps.setInt(1, year);
             ps.setInt(2, month);
 
@@ -137,6 +147,7 @@ public class ConnectionSQL {
                 }
                 list.add(value);
             }
+            con.close();
         }
         catch (Exception e) {
             list = null;
@@ -145,11 +156,14 @@ public class ConnectionSQL {
         return list;
     }
 
+    //Method to return a user list from database
     public List<String> userList (int userStatus) {
         List<String> list = new ArrayList<>();
         try {
             Connection con = SQLConnection();
-            PreparedStatement ps = con.prepareStatement("SELECT CONCAT(FIRST_NAME, ' ', LAST_NAME) FULL_NAME, USER_EMAIL, USER_ADMIN, USER_STATUS FROM USERS WHERE USER_STATUS = ? ORDER BY FIRST_NAME");
+            PreparedStatement ps = con.prepareStatement("SELECT CONCAT(FIRST_NAME, ' ', LAST_NAME) FULL_NAME, USER_EMAIL, USER_ADMIN, USER_STATUS " +
+                    "FROM USERS WHERE USER_STATUS = ? " +
+                    "ORDER BY FIRST_NAME");
             ps.setInt(1, userStatus);
 
             ResultSet rs = ps.executeQuery();
@@ -166,6 +180,7 @@ public class ConnectionSQL {
                 }
                 list.add(value);
             }
+            con.close();
         }
         catch (Exception e) {
             list = null;
@@ -174,13 +189,16 @@ public class ConnectionSQL {
         return list;
     }
 
+    //Method to update a user status (Active or Inactive)
     public int updateUserStatus (String email, int status) {
         try {
             Connection con = SQLConnection();
             PreparedStatement ps = con.prepareStatement("UPDATE USERS SET USER_STATUS = ? WHERE USER_EMAIL = ?");
             ps.setInt(1, status);
             ps.setString(2, email);
-            return ps.executeUpdate();
+            int result = ps.executeUpdate();
+            con.close();
+            return result;
         }
         catch (Exception e) {
             Log.e("Error", e.getMessage());

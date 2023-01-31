@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -27,10 +28,6 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHo
         this.context = current;
         this.list = list;
     }
-
-//    public void update (List<String> list) {
-//        this.list = list;
-//    }
 
     @NonNull
     @Override
@@ -52,12 +49,13 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHo
         else {
             holder.time.setText(scheduleList[4]);
         }
-        if (scheduleList[5].equals("null")) {//Real score
+        if (scheduleList[5].equals("null")) { //Real score
             holder.score.setText(context.getResources().getString(R.string.txt_score_real) + " -");
         }
         else {
             holder.score.setText(context.getResources().getString(R.string.txt_score_real) + " " + scheduleList[5]);
         }
+        //Removing accents from team names to match image names
         String t1 = Normalizer.normalize(scheduleList[6].toLowerCase(Locale.ROOT).replace(" ", "_").replace(".", ""), Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
         String t2 = Normalizer.normalize(scheduleList[7].toLowerCase(Locale.ROOT).replace(" ", "_").replace(".", ""), Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
         holder.imgOne.setImageResource(context.getResources().getIdentifier(t1, "drawable", context.getPackageName()));

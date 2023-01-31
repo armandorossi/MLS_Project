@@ -28,41 +28,37 @@ public class RegisterActivity extends AppCompatActivity {
         View view = binding.getRoot();
         setContentView(view);
 
-        binding.btnConfirmRegister2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                confirmRegisterAction();
-            }
+        binding.btnConfirmRegister2.setOnClickListener((View v) -> {
+            confirmRegisterAction();
         });
 
-        binding.btnCancelRegister.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                cancelRegisterAction();
-            }
+        binding.btnCancelRegister.setOnClickListener((View v) -> {
+            Cancel = false;
+            finish();
         });
     }
 
+    //Method to validate all information inserted during registration
     private void confirmRegisterAction () {
-        if (binding.edtFirstName.getText().toString().isEmpty()){
+        if (binding.edtFirstName.getText().toString().isEmpty()){ //Checking first name
             binding.edtFirstName.setError(getString(R.string.first_name_empty));
         }
-        else if (binding.edtLastName.getText().toString().isEmpty()){
+        else if (binding.edtLastName.getText().toString().isEmpty()){ //Checking last name
             binding.edtLastName.setError(getString(R.string.last_name_empty));
         }
-        else if (binding.edtEmailRegister.getText().toString().isEmpty()){
+        else if (binding.edtEmailRegister.getText().toString().isEmpty()){ //Checking email
             binding.edtEmailRegister.setError(getString(R.string.email_empty));
         }
-        else if (binding.edtPasswordRegister.getText().toString().isEmpty()){
+        else if (binding.edtPasswordRegister.getText().toString().isEmpty()){ //Checking password
             binding.edtPasswordRegister.setError(getString(R.string.password_empty));
         }
-        else if (binding.edtPasswordConfirmRegister.getText().toString().isEmpty()){
+        else if (binding.edtPasswordConfirmRegister.getText().toString().isEmpty()){ //Checking password confirmation
             binding.edtPasswordConfirmRegister.setError(getString(R.string.password_confirm_empty));
         }
-        else if (!binding.edtPasswordRegister.getText().toString().equals(binding.edtPasswordConfirmRegister.getText().toString())) {
+        else if (!binding.edtPasswordRegister.getText().toString().equals(binding.edtPasswordConfirmRegister.getText().toString())) { //Checking if both passwords are equal
             binding.edtPasswordConfirmRegister.setError(getString(R.string.password_not_equal));
         }
-        else if (binding.edtPasswordRegister.getText().toString().length() < 8 || !isValidPassword(binding.edtPasswordRegister.getText().toString())) {
+        else if (binding.edtPasswordRegister.getText().toString().length() < 8 || !isValidPassword(binding.edtPasswordRegister.getText().toString())) { //Checking if password meet password requirements
             binding.edtPasswordRegister.setError(getString(R.string.password_requirements));
         }
         else {
@@ -77,7 +73,7 @@ public class RegisterActivity extends AppCompatActivity {
             try {
                 password = hashPassword.hashAPassword(binding.edtPasswordRegister.getText().toString());
                 if (con.registerConnection(this, firstName, lastName, email, password)){
-                    Toast.makeText(this, "Registered", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, "Registered. Redirecting to login page.", Toast.LENGTH_LONG).show();
                     (new Handler()).postDelayed(this::finish, 3000);
                 }
                 else {
@@ -85,16 +81,12 @@ public class RegisterActivity extends AppCompatActivity {
                 }
             }
             catch (Exception e){
-                Toast.makeText(this, "Failed to register, try again.", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Failed to register, try again. " + e.getMessage(), Toast.LENGTH_LONG).show();
             }
         }
     }
 
-    private void cancelRegisterAction () {
-        Cancel = false;
-        finish();
-    }
-
+    //Overrinding finish method to return username to the previous activity
     @Override
     public void finish() {
         if (Cancel) {
@@ -106,6 +98,7 @@ public class RegisterActivity extends AppCompatActivity {
         super.finish();
     }
 
+    //Method to check if password meet requirements
     private static boolean isValidPassword(final String password) {
         Pattern pattern;
         Matcher matcher;

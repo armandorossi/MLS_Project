@@ -28,21 +28,17 @@ public class MainActivity extends AppCompatActivity {
         View view = binding.getRoot();
         setContentView(view);
 
-        binding.btnLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                loginAction();
-            }
+        binding.btnLogin.setOnClickListener((View v) -> {
+            loginAction();
         });
 
-        binding.btnRegister.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                registerAction();
-            }
+        binding.btnRegister.setOnClickListener((View v) -> {
+            Intent registerIntent = new Intent(this, RegisterActivity.class);
+            startForResult.launch(registerIntent);
         });
     }
 
+    //Method responsible for retrieving the username from RegisterActivity when a new user is registered and set the edtUsername with this information
     ActivityResultLauncher<Intent> startForResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
         @Override
         public void onActivityResult(ActivityResult result) {
@@ -54,12 +50,12 @@ public class MainActivity extends AppCompatActivity {
         }
     });
 
+    //Method for authenticating an existing user and setting the privilege mode (if the user is an admin)
     private void loginAction () {
         ConnectionSQL con = new ConnectionSQL();
         HashPassword hashPassword = new HashPassword();
         try {
             String[] result = con.loginConnection(binding.edtUsername.getText().toString(), hashPassword.hashAPassword(binding.edtPassword.getText().toString())).split(";");
-//            if (con.loginConnection(binding.edtUsername.getText().toString(), hashPassword.hashAPassword(binding.edtPassword.getText().toString()))){
             if (result[0].equals("1")) {
                 if (result[2].equals("1")){
                     Intent userIntent = new Intent(this, UserActivity.class);
@@ -81,10 +77,5 @@ public class MainActivity extends AppCompatActivity {
         catch (Exception e) {
             Toast.makeText(this, "Login failed. " + e.getMessage(), Toast.LENGTH_LONG).show();
         }
-    }
-
-    private void registerAction () {
-        Intent registerIntent = new Intent(this, RegisterActivity.class);
-        startForResult.launch(registerIntent);
     }
 }

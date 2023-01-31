@@ -20,7 +20,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
 
     private Context context;
     private List<String> list;
-    Spinner spn;
+    private Spinner spn;
 
     public UserAdapter(Context current, List<String> list, Spinner spn) {
         this.context = current;

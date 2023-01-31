@@ -4,7 +4,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,7 +11,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Toast;
+
 import com.example.mls_project.databinding.ActivityScheduleBinding;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -22,7 +24,7 @@ public class ScheduleActivity extends AppCompatActivity {
     private ActivityScheduleBinding binding;
     private RecyclerView.LayoutManager layoutManager;
     private RecyclerView.Adapter adapter;
-    private List<String> list;
+    private List<String> list = new ArrayList<>();
     private Date today = new Date();
     private Calendar cal = Calendar.getInstance();
     private ConnectionSQL con = new ConnectionSQL();
@@ -34,12 +36,14 @@ public class ScheduleActivity extends AppCompatActivity {
         View view = binding.getRoot();
         setContentView(view);
 
+        //Getting info about user privileges
         Bundle extras = getIntent().getExtras();
         String admin = extras.getString("Admin");
         if (admin.equals("1")){
             binding.imgUser.setVisibility(View.VISIBLE);
         }
 
+        //Populating Year and Month spinner and retrieving list of games
         try {
             cal.setTime(today);
 
@@ -66,6 +70,7 @@ public class ScheduleActivity extends AppCompatActivity {
         adapter = new ScheduleAdapter(this, list);
         binding.rvScheduleItems.setAdapter(adapter);
 
+        //Refreshing data when a different year is selected
         binding.spnYear.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -73,6 +78,9 @@ public class ScheduleActivity extends AppCompatActivity {
                 list = con.scheduleList(Integer.parseInt(binding.spnYear.getSelectedItem().toString()), Integer.parseInt(binding.spnMonth.getSelectedItem().toString()));
                 adapter = new ScheduleAdapter(ScheduleActivity.this, list);
                 binding.rvScheduleItems.setAdapter(adapter);
+                if (list.size() == 0) {
+                    Toast.makeText(ScheduleActivity.this, "No games found for the selected period", Toast.LENGTH_LONG).show();
+                }
             }
 
             @Override
@@ -81,6 +89,7 @@ public class ScheduleActivity extends AppCompatActivity {
             }
         });
 
+        //Refreshing data when a different month is selected
         binding.spnMonth.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -88,6 +97,9 @@ public class ScheduleActivity extends AppCompatActivity {
                 list = con.scheduleList(Integer.parseInt(binding.spnYear.getSelectedItem().toString()), Integer.parseInt(binding.spnMonth.getSelectedItem().toString()));
                 adapter = new ScheduleAdapter(ScheduleActivity.this, list);
                 binding.rvScheduleItems.setAdapter(adapter);
+                if (list.size() == 0) {
+                    Toast.makeText(ScheduleActivity.this, "No games found for the selected period", Toast.LENGTH_LONG).show();
+                }
             }
 
             @Override
@@ -96,6 +108,7 @@ public class ScheduleActivity extends AppCompatActivity {
             }
         });
 
+        //Method to open User activity
         binding.imgUser.setOnClickListener((View v) -> {
             Intent userIntent = new Intent(this, UserActivity.class);
             userIntent.putExtra("Admin", admin);
@@ -104,6 +117,7 @@ public class ScheduleActivity extends AppCompatActivity {
         });
     }
 
+    //Overriding method to display a confirmation message before exiting the app
     @Override
     public void onBackPressed() {
         new AlertDialog.Builder(this)
