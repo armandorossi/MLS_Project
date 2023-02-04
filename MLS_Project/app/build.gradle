@@ -2,6 +2,10 @@ plugins {
     id 'com.android.application'
 }
 
+def localPropertiesFile = rootProject.file("local.properties")
+def localProperties = new Properties()
+localProperties.load(new FileInputStream(localPropertiesFile))
+
 android {
     namespace 'com.example.mls_project'
     compileSdk 33
@@ -16,6 +20,10 @@ android {
         targetSdk 32
         versionCode 1
         versionName "1.0"
+
+        buildConfigField "String", "URL", localProperties['URL']
+        buildConfigField "String", "USER", localProperties['USER']
+        buildConfigField "String", "KEY", localProperties['KEY']
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

@@ -1,166 +1,171 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingLeft="10dp"
-    android:paddingRight="10dp"
-    android:orientation="vertical">
-
+    android:layout_height="match_parent">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
         android:orientation="vertical">
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:layout_marginTop="10dp"
-            android:textStyle="bold"
-            android:textSize="25sp"
-            android:text="@string/txt_registration_page"/>
-    </LinearLayout>
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:layout_marginTop="10dp"
+                android:textStyle="bold"
+                android:textSize="25sp"
+                android:text="@string/txt_registration_page"/>
+        </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="start">
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
+            android:orientation="horizontal"
             android:gravity="start">
-            <TextView
-                android:id="@+id/txtFirstName"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="50dp"
-                android:text="@string/txt_first_name_register"
-                android:textStyle="bold" />
+                android:orientation="vertical"
+                android:gravity="start">
+                <TextView
+                    android:id="@+id/txtFirstName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="50dp"
+                    android:text="@string/txt_first_name_register"
+                    android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/txtLastName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="55dp"
-                android:text="@string/txt_last_name_register"
-                android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/txtLastName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="55dp"
+                    android:text="@string/txt_last_name_register"
+                    android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/txtEmailRegister"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="55dp"
-                android:text="@string/txt_email_register"
-                android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/txtEmailRegister"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="55dp"
+                    android:text="@string/txt_email_register"
+                    android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/txtPasswordRegister"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="55dp"
-                android:text="@string/txt_password_register"
-                android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/txtPasswordRegister"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="55dp"
+                    android:text="@string/txt_password_register"
+                    android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/txtPasswordConfirmRegister"
-                android:layout_width="wrap_content"
+                <TextView
+                    android:id="@+id/txtPasswordConfirmRegister"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="65dp"
+                    android:text="@string/txt_password_confirm_register"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="60dp"
-                android:text="@string/txt_password_confirm_register"
-                android:textStyle="bold" />
+                android:orientation="vertical"
+                android:gravity="start"
+                android:layout_marginStart="5dp">
+                <EditText
+                    android:id="@+id/edtFirstName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="30dp"
+                    android:autofillHints=""
+                    android:ems="10"
+                    android:hint="@string/first_name_example"
+                    android:inputType="textPersonName"
+                    android:minHeight="48dp"
+                    android:textColorHint="#757575" />
+
+                <EditText
+                    android:id="@+id/edtLastName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="25dp"
+                    android:autofillHints=""
+                    android:ems="10"
+                    android:hint="@string/last_name_example"
+                    android:inputType="textPersonName"
+                    android:minHeight="48dp"
+                    android:textColorHint="#757575" />
+
+                <EditText
+                    android:id="@+id/edtEmailRegister"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="25dp"
+                    android:ems="10"
+                    android:inputType="textEmailAddress"
+                    android:minHeight="48dp"
+                    android:hint="@string/email_example"
+                    android:autofillHints=""
+                    android:textColorHint="#757575" />
+
+                <EditText
+                    android:id="@+id/edtPasswordRegister"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="25dp"
+                    android:autofillHints=""
+                    android:ems="10"
+                    android:hint="@string/register_password_example"
+                    android:inputType="textPassword"
+                    android:minHeight="48dp"
+                    android:textColorHint="#757575" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/password_requirements"
+                    android:textSize="12sp"/>
+
+                <EditText
+                    android:id="@+id/edtPasswordConfirmRegister"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:autofillHints=""
+                    android:ems="10"
+                    android:hint="@string/confirm_password_example"
+                    android:inputType="textPassword"
+                    android:minHeight="48dp"
+                    android:textColorHint="#757575" />
+            </LinearLayout>
         </LinearLayout>
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:gravity="start"
-            android:layout_marginStart="5dp">
-            <EditText
-                android:id="@+id/edtFirstName"
-                android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:gravity="center_horizontal"
+            android:layout_marginTop="20dp">
+            <Button
+                android:id="@+id/btnConfirmRegister2"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
-                android:autofillHints=""
-                android:ems="10"
-                android:hint="@string/first_name_example"
-                android:inputType="textPersonName"
-                android:minHeight="48dp"
-                android:textColorHint="#757575" />
+                android:layout_marginEnd="20dp"
+                android:text="@string/btn_confirm_register" />
 
-            <EditText
-                android:id="@+id/edtLastName"
-                android:layout_width="match_parent"
+            <Button
+                android:id="@+id/btnCancelRegister"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="25dp"
-                android:autofillHints=""
-                android:ems="10"
-                android:hint="@string/last_name_example"
-                android:inputType="textPersonName"
-                android:minHeight="48dp"
-                android:textColorHint="#757575" />
-
-            <EditText
-                android:id="@+id/edtEmailRegister"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="25dp"
-                android:ems="10"
-                android:inputType="textEmailAddress"
-                android:minHeight="48dp"
-                android:hint="@string/email_example"
-                android:autofillHints=""
-                android:textColorHint="#757575" />
-
-            <EditText
-                android:id="@+id/edtPasswordRegister"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="25dp"
-                android:autofillHints=""
-                android:ems="10"
-                android:hint="@string/register_password_example"
-                android:inputType="textPassword"
-                android:minHeight="48dp"
-                android:textColorHint="#757575" />
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/password_requirements"
-                android:textSize="12sp"/>
-
-            <EditText
-                android:id="@+id/edtPasswordConfirmRegister"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:autofillHints=""
-                android:ems="10"
-                android:hint="@string/confirm_password_example"
-                android:inputType="textPassword"
-                android:minHeight="48dp"
-                android:textColorHint="#757575" />
+                android:text="@string/btn_cancel_register" />
         </LinearLayout>
     </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_horizontal"
-        android:layout_marginTop="20dp">
-        <Button
-            android:id="@+id/btnConfirmRegister2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="20dp"
-            android:text="@string/btn_confirm_register" />
 
-        <Button
-            android:id="@+id/btnCancelRegister"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/btn_cancel_register" />
-    </LinearLayout>
 
-</LinearLayout>
+
+</ScrollView>

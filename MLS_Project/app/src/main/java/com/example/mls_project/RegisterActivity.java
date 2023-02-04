@@ -1,18 +1,13 @@
 package com.example.mls_project;
 
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
+import android.util.Patterns;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
-
 import com.example.mls_project.databinding.ActivityRegisterBinding;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -28,9 +23,7 @@ public class RegisterActivity extends AppCompatActivity {
         View view = binding.getRoot();
         setContentView(view);
 
-        binding.btnConfirmRegister2.setOnClickListener((View v) -> {
-            confirmRegisterAction();
-        });
+        binding.btnConfirmRegister2.setOnClickListener((View v) -> confirmRegisterAction());
 
         binding.btnCancelRegister.setOnClickListener((View v) -> {
             Cancel = false;
@@ -49,6 +42,9 @@ public class RegisterActivity extends AppCompatActivity {
         else if (binding.edtEmailRegister.getText().toString().isEmpty()){ //Checking email
             binding.edtEmailRegister.setError(getString(R.string.email_empty));
         }
+        else if (!Patterns.EMAIL_ADDRESS.matcher(binding.edtEmailRegister.getText().toString()).matches()) {
+            binding.edtEmailRegister.setError(getString(R.string.email_incorrect));
+        }
         else if (binding.edtPasswordRegister.getText().toString().isEmpty()){ //Checking password
             binding.edtPasswordRegister.setError(getString(R.string.password_empty));
         }
@@ -63,7 +59,7 @@ public class RegisterActivity extends AppCompatActivity {
         }
         else {
             ConnectionSQL con = new ConnectionSQL();
-            HashPassword hashPassword = new HashPassword();
+//            HashPassword hashPassword = new HashPassword();
 
             String firstName, lastName, email, password;
             firstName = binding.edtFirstName.getText().toString();
@@ -71,7 +67,7 @@ public class RegisterActivity extends AppCompatActivity {
             email = binding.edtEmailRegister.getText().toString();
 
             try {
-                password = hashPassword.hashAPassword(binding.edtPasswordRegister.getText().toString());
+                password = HashPassword.hashAPassword(binding.edtPasswordRegister.getText().toString());
                 if (con.registerConnection(this, firstName, lastName, email, password)){
                     Toast.makeText(this, "Registered. Redirecting to login page.", Toast.LENGTH_LONG).show();
                     (new Handler()).postDelayed(this::finish, 3000);
@@ -86,7 +82,7 @@ public class RegisterActivity extends AppCompatActivity {
         }
     }
 
-    //Overrinding finish method to return username to the previous activity
+    //Overriding finish method to return username to the previous activity
     @Override
     public void finish() {
         if (Cancel) {

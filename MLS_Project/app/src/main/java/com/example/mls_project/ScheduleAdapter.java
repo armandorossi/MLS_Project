@@ -1,28 +1,21 @@
 package com.example.mls_project;
 
-import android.app.Application;
 import android.content.Context;
-import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
-
 import java.text.Normalizer;
 import java.util.List;
 import java.util.Locale;
 
 public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHolder>{
 
-    private Context context;
-    private List<String> list;
+    private final Context context;
+    private final List<String> list;
 
     public ScheduleAdapter(Context current, List<String> list) {
         this.context = current;
@@ -33,8 +26,7 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHo
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.schedule_item, viewGroup, false);
-        ViewHolder viewHolder = new ViewHolder(v);
-        return viewHolder;
+        return new ViewHolder(v);
     }
 
     @Override
@@ -49,12 +41,14 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHo
         else {
             holder.time.setText(scheduleList[4]);
         }
+        String text;
         if (scheduleList[5].equals("null")) { //Real score
-            holder.score.setText(context.getResources().getString(R.string.txt_score_real) + " -");
+            text = context.getResources().getString(R.string.txt_score_real) + " -";
         }
         else {
-            holder.score.setText(context.getResources().getString(R.string.txt_score_real) + " " + scheduleList[5]);
+            text = context.getResources().getString(R.string.txt_score_real) + " " + scheduleList[5];
         }
+        holder.score.setText(text);
         //Removing accents from team names to match image names
         String t1 = Normalizer.normalize(scheduleList[6].toLowerCase(Locale.ROOT).replace(" ", "_").replace(".", ""), Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
         String t2 = Normalizer.normalize(scheduleList[7].toLowerCase(Locale.ROOT).replace(" ", "_").replace(".", ""), Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");

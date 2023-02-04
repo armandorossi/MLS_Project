@@ -14,13 +14,13 @@ import java.util.List;
 
 public class ConnectionSQL {
 
-    private static final String url = "jdbc:mysql://sql487.main-hosting.eu/u842004852_mlsproject_db";
-    private static final String user = "u842004852_mlsproject_use";
-    private static final String pass = "vknP=j8O&a";
+    private static final String url = BuildConfig.URL;//"jdbc:mysql://sql487.main-hosting.eu/u842004852_mlsproject_db";
+    private static final String user = BuildConfig.USER;//"u842004852_mlsproject_use";
+    private static final String pass = BuildConfig.KEY;//"vknP=j8O&a";
 
     //Method to create a connection and return it to other methods
     private Connection SQLConnection() {
-        Connection con =  null;
+        Connection con;
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
         try {
@@ -97,7 +97,7 @@ public class ConnectionSQL {
         return result;
     }
 
-    //Metho to return a list of years from database
+    //Method to return a list of years from database
     public List<String> yearList () {
         List<String> list = new ArrayList<>();
         try {

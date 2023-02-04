@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">MLS Research Project</string>
+
     <string name="txt_login_page">Login</string>
     <string name="txt_username">Username:</string>
     <string name="txt_password">Password:</string>
@@ -7,6 +8,7 @@
     <string name="btn_register">Register</string>
     <string name="username_example">email@domain.com</string>
     <string name="password_example">********</string>
+
     <string name="txt_registration_page">Registration</string>
     <string name="txt_first_name_register">First name:</string>
     <string name="txt_last_name_register">Last name:</string>
@@ -24,13 +26,14 @@
     <string name="first_name_empty">First name cannot be empty</string>
     <string name="last_name_empty">Last name cannot be empty</string>
     <string name="email_empty">Email cannot be empty</string>
+    <string name="email_incorrect">Email is invalid</string>
     <string name="password_empty">Password cannot be empty</string>
     <string name="password_confirm_empty">Password confirmation cannot be empty</string>
     <string name="password_not_equal">Passwords must be equal</string>
+
     <string name="txt_schedule_page">Schedule</string>
     <string name="txt_year">Year: </string>
     <string name="txt_month">Month: </string>
-
     <string name="txt_schedule_date">Date</string>
     <string name="txt_f_team_name">Team one</string>
     <string name="txt_s_team_name">Team two</string>
@@ -49,4 +52,5 @@
     <string name="txt_user_full_name">Full name</string>
     <string name="txt_user_email">Email</string>
     <string name="txt_user_admin">Admin: </string>
+    <string name="padlock">Change user status</string>
 </resources>

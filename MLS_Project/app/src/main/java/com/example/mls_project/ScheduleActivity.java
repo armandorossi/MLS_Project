@@ -4,7 +4,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,7 +11,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
-
 import com.example.mls_project.databinding.ActivityScheduleBinding;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -22,12 +20,11 @@ import java.util.List;
 public class ScheduleActivity extends AppCompatActivity {
 
     private ActivityScheduleBinding binding;
-    private RecyclerView.LayoutManager layoutManager;
     private RecyclerView.Adapter adapter;
     private List<String> list = new ArrayList<>();
-    private Date today = new Date();
-    private Calendar cal = Calendar.getInstance();
-    private ConnectionSQL con = new ConnectionSQL();
+    private final Date today = new Date();
+    private final Calendar cal = Calendar.getInstance();
+    private final ConnectionSQL con = new ConnectionSQL();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +62,7 @@ public class ScheduleActivity extends AppCompatActivity {
             Log.e("Error", e.getMessage());
         }
 
-        layoutManager = new LinearLayoutManager(this);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         binding.rvScheduleItems.setLayoutManager(layoutManager);
         adapter = new ScheduleAdapter(this, list);
         binding.rvScheduleItems.setAdapter(adapter);
@@ -124,14 +121,7 @@ public class ScheduleActivity extends AppCompatActivity {
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .setTitle("Closing")
                 .setMessage("Are you sure you want to exit?")
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener()
-                {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        finish();
-                    }
-
-                })
+                .setPositiveButton("Yes", (dialog, which) -> finish())
                 .setNegativeButton("No", null)
                 .show();
     }

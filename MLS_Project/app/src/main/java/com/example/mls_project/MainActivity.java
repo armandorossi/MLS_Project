@@ -5,17 +5,14 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
-
 import com.example.mls_project.databinding.ActivityMainBinding;
 
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -28,14 +25,14 @@ public class MainActivity extends AppCompatActivity {
         View view = binding.getRoot();
         setContentView(view);
 
-        binding.btnLogin.setOnClickListener((View v) -> {
-            loginAction();
-        });
+        binding.btnLogin.setOnClickListener((View v) -> loginAction());
 
         binding.btnRegister.setOnClickListener((View v) -> {
             Intent registerIntent = new Intent(this, RegisterActivity.class);
             startForResult.launch(registerIntent);
         });
+
+        Log.e("Error", BuildConfig.KEY);
     }
 
     //Method responsible for retrieving the username from RegisterActivity when a new user is registered and set the edtUsername with this information
@@ -44,7 +41,10 @@ public class MainActivity extends AppCompatActivity {
         public void onActivityResult(ActivityResult result) {
             if (result.getResultCode() == Activity.RESULT_OK) {
                 Intent data = result.getData();
-                String returnString = data.getExtras().getString("returnEmail");
+                String returnString = null;
+                if (data != null) {
+                    returnString = data.getExtras().getString("returnEmail");
+                }
                 binding.edtUsername.setText(returnString);
             }
         }
@@ -53,9 +53,9 @@ public class MainActivity extends AppCompatActivity {
     //Method for authenticating an existing user and setting the privilege mode (if the user is an admin)
     private void loginAction () {
         ConnectionSQL con = new ConnectionSQL();
-        HashPassword hashPassword = new HashPassword();
+//        HashPassword hashPassword = new HashPassword();
         try {
-            String[] result = con.loginConnection(binding.edtUsername.getText().toString(), hashPassword.hashAPassword(binding.edtPassword.getText().toString())).split(";");
+            String[] result = con.loginConnection(binding.edtUsername.getText().toString(), HashPassword.hashAPassword(binding.edtPassword.getText().toString())).split(";");
             if (result[0].equals("1")) {
                 if (result[2].equals("1")){
                     Intent userIntent = new Intent(this, UserActivity.class);
