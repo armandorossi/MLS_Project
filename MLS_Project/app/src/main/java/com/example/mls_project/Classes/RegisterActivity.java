@@ -1,4 +1,4 @@
-package com.example.mls_project;
+package com.example.mls_project.Classes;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
@@ -7,6 +7,10 @@ import android.os.Handler;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Toast;
+
+import com.example.mls_project.Database.ConnectionSQL;
+import com.example.mls_project.Database.HashPassword;
+import com.example.mls_project.R;
 import com.example.mls_project.databinding.ActivityRegisterBinding;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

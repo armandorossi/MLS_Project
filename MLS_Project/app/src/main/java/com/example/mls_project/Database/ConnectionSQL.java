@@ -1,9 +1,12 @@
-package com.example.mls_project;
+package com.example.mls_project.Database;
 
 import android.content.Context;
 import android.os.StrictMode;
 import android.util.Log;
 import android.widget.Toast;
+
+import com.example.mls_project.BuildConfig;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -124,7 +127,7 @@ public class ConnectionSQL {
         List<String> list = new ArrayList<>();
         try {
             Connection con = SQLConnection();
-            PreparedStatement ps = con.prepareStatement("SELECT S.*, T1.TEAM_NAME, T2.TEAM_NAME " +
+            PreparedStatement ps = con.prepareStatement("SELECT S.SCHEDULE_DATE, S.F_TEAM_NAME, S.S_TEAM_NAME, S.SCHEDULE_TIME, S.SCORE, T1.TEAM_NAME, T2.TEAM_NAME " +
                     "FROM SCHEDULE S " +
                     "INNER JOIN TEAMS T1 ON S.F_TEAM_NAME = T1.TEAM_SHORT_NAME " +
                     "INNER JOIN TEAMS T2 ON S.S_TEAM_NAME = T2.TEAM_SHORT_NAME " +
@@ -204,5 +207,69 @@ public class ConnectionSQL {
             Log.e("Error", e.getMessage());
             return 0;
         }
+    }
+
+    public List<String> teamList () {
+        List<String> list = new ArrayList<>();
+        try {
+            Connection con = SQLConnection();
+            PreparedStatement ps = con.prepareStatement("SELECT TEAM_NAME FROM TEAMS ORDER BY TEAM_NAME");
+            ResultSet rs = ps.executeQuery();
+            ResultSetMetaData rsmd = rs.getMetaData();
+            while (rs.next()) {
+                String value = "";
+                for (int i = 1; i <= rsmd.getColumnCount(); i++) {
+                    if (i == 1) {
+                        value = rs.getString(i);
+                    }
+                    else {
+                        value += ";" + rs.getString(i);
+                    }
+                }
+                list.add(value);
+            }
+            con.close();
+        }
+        catch (Exception e) {
+            list = null;
+            Log.e("Error", e.getMessage());
+        }
+        return list;
+    }
+
+    public List<String> teamSchedule (String teamName, String date) {
+        List<String> list = new ArrayList<>();
+        try {
+            Connection con = SQLConnection();
+            PreparedStatement ps = con.prepareStatement("SELECT S.SCHEDULE_DATE, S.F_TEAM_NAME, S.S_TEAM_NAME, S.SCHEDULE_TIME, S.SCORE, T1.TEAM_NAME, T2.TEAM_NAME " +
+                    "FROM SCHEDULE S " +
+                    "INNER JOIN TEAMS T1 ON S.F_TEAM_NAME = T1.TEAM_SHORT_NAME " +
+                    "INNER JOIN TEAMS T2 ON S.S_TEAM_NAME = T2.TEAM_SHORT_NAME " +
+                    "WHERE S.SCHEDULE_DATE >= ? AND (T1.TEAM_NAME = ? OR T2.TEAM_NAME = ?) " +
+                    "ORDER BY S.SCHEDULE_DATE, S.SCHEDULE_TIME");
+            ps.setString(1, date);
+            ps.setString(2, teamName);
+            ps.setString(3, teamName);
+            ResultSet rs = ps.executeQuery();
+            ResultSetMetaData rsmd = rs.getMetaData();
+            while (rs.next()) {
+                String value = "";
+                for (int i = 1; i <= rsmd.getColumnCount(); i++) {
+                    if (i == 1) {
+                        value = rs.getString(i);
+                    }
+                    else {
+                        value += ";" + rs.getString(i);
+                    }
+                }
+                list.add(value);
+            }
+            con.close();
+        }
+        catch (Exception e) {
+            list = null;
+            Log.e("Error", e.getMessage());
+        }
+        return list;
     }
 }

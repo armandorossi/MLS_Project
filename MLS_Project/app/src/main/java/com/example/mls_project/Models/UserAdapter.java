@@ -1,4 +1,4 @@
-package com.example.mls_project;
+package com.example.mls_project.Models;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -12,6 +12,10 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.mls_project.Database.ConnectionSQL;
+import com.example.mls_project.R;
+
 import java.util.List;
 
 public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {

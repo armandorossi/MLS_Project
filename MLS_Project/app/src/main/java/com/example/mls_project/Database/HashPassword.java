@@ -1,4 +1,4 @@
-package com.example.mls_project;
+package com.example.mls_project.Database;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

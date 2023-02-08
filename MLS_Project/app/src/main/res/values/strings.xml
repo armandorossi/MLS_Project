@@ -31,7 +31,7 @@
     <string name="password_confirm_empty">Password confirmation cannot be empty</string>
     <string name="password_not_equal">Passwords must be equal</string>
 
-    <string name="txt_schedule_page">Schedule</string>
+    <string name="txt_schedule_page">Schedule - Regular Season</string>
     <string name="txt_year">Year: </string>
     <string name="txt_month">Month: </string>
     <string name="txt_schedule_date">Date</string>
@@ -45,6 +45,7 @@
     <string name="txt_user_page">Users</string>
     <string name="txt_user_first_name">First name: </string>
     <string name="txt_user_status">Status: </string>
+    <string name="txt_user_search">Search:</string>
     <string-array name="user_status_items">
         <item>Active</item>
         <item>Inactive</item>
@@ -53,4 +54,10 @@
     <string name="txt_user_email">Email</string>
     <string name="txt_user_admin">Admin: </string>
     <string name="padlock">Change user status</string>
+
+    <string name="menu_user">User</string>
+    <string name="menu_teams">Teams</string>
+    <string name="menu_schedule">Schedule</string>
+
+    <string name="txt_team">Teams</string>
 </resources>

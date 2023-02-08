@@ -1,16 +1,25 @@
-package com.example.mls_project;
+package com.example.mls_project.Classes;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
+
+import com.example.mls_project.Database.ConnectionSQL;
+import com.example.mls_project.R;
+import com.example.mls_project.Models.ScheduleAdapter;
 import com.example.mls_project.databinding.ActivityScheduleBinding;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -20,11 +29,12 @@ import java.util.List;
 public class ScheduleActivity extends AppCompatActivity {
 
     private ActivityScheduleBinding binding;
-    private RecyclerView.Adapter adapter;
+    private RecyclerView.Adapter<ScheduleAdapter.ViewHolder> adapter;
     private List<String> list = new ArrayList<>();
     private final Date today = new Date();
     private final Calendar cal = Calendar.getInstance();
     private final ConnectionSQL con = new ConnectionSQL();
+    private static String admin = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,13 +42,6 @@ public class ScheduleActivity extends AppCompatActivity {
         binding = ActivityScheduleBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         setContentView(view);
-
-        //Getting info about user privileges
-        Bundle extras = getIntent().getExtras();
-        String admin = extras.getString("Admin");
-        if (admin.equals("1")){
-            binding.imgUser.setVisibility(View.VISIBLE);
-        }
 
         //Populating Year and Month spinner and retrieving list of games
         try {
@@ -104,14 +107,6 @@ public class ScheduleActivity extends AppCompatActivity {
 
             }
         });
-
-        //Method to open User activity
-        binding.imgUser.setOnClickListener((View v) -> {
-            Intent userIntent = new Intent(this, UserActivity.class);
-            userIntent.putExtra("Admin", admin);
-            startActivity(userIntent);
-            finish();
-        });
     }
 
     //Overriding method to display a confirmation message before exiting the app
@@ -124,5 +119,52 @@ public class ScheduleActivity extends AppCompatActivity {
                 .setPositiveButton("Yes", (dialog, which) -> finish())
                 .setNegativeButton("No", null)
                 .show();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.activity_menu, menu);
+
+        //Getting info about user privileges
+        Bundle extras = getIntent().getExtras();
+        admin = extras.getString("Admin");
+        if (!admin.equals("1")){
+            menu.findItem(R.id.menu_user).setVisible(false);
+        }
+
+        return true;
+    }
+
+    @SuppressLint("NonConstantResourceId")
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+
+            case R.id.menu_user:
+                Intent userIntent = new Intent(this, UserActivity.class);
+                userIntent.putExtra("Admin", admin);
+                startActivity(userIntent);
+                finish();
+                return true;
+
+            case R.id.menu_schedule:
+                Intent scheduleIntent = new Intent(this, ScheduleActivity.class);
+                scheduleIntent.putExtra("Admin", admin);
+                startActivity(scheduleIntent);
+                finish();
+                return true;
+
+            case R.id.menu_teams:
+                Intent TeamIntent = new Intent(this, TeamActivity.class);
+                TeamIntent.putExtra("Admin", admin);
+                startActivity(TeamIntent);
+                finish();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }

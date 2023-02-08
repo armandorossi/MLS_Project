@@ -1,4 +1,4 @@
-package com.example.mls_project;
+package com.example.mls_project.Classes;
 
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
@@ -8,20 +8,22 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
-import com.example.mls_project.databinding.ActivityMainBinding;
+
+import com.example.mls_project.Database.ConnectionSQL;
+import com.example.mls_project.Database.HashPassword;
+import com.example.mls_project.databinding.ActivityLoginBinding;
 
 
-public class MainActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity {
 
-    private ActivityMainBinding binding;
+    private ActivityLoginBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        binding = ActivityLoginBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         setContentView(view);
 
@@ -31,8 +33,6 @@ public class MainActivity extends AppCompatActivity {
             Intent registerIntent = new Intent(this, RegisterActivity.class);
             startForResult.launch(registerIntent);
         });
-
-        Log.e("Error", BuildConfig.KEY);
     }
 
     //Method responsible for retrieving the username from RegisterActivity when a new user is registered and set the edtUsername with this information
