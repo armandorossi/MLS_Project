@@ -40,24 +40,32 @@
     <string name="txt_schedule_time">Time</string>
     <string name="txt_versus">vs</string>
     <string name="txt_score_real">Score: </string>
-    <string name="txt_score_predicted">Predicted: </string>
+    <string name="txt_score_predicted">Prediction: </string>
 
     <string name="txt_user_page">Users</string>
     <string name="txt_user_first_name">First name: </string>
     <string name="txt_user_status">Status: </string>
     <string name="txt_user_search">Search:</string>
-    <string-array name="user_status_items">
-        <item>Active</item>
-        <item>Inactive</item>
-    </string-array>
+    <string name="user_status_active">Active</string>
+    <string name="user_status_inactive">Inactive</string>
     <string name="txt_user_full_name">Full name</string>
     <string name="txt_user_email">Email</string>
     <string name="txt_user_admin">Admin: </string>
     <string name="padlock">Change user status</string>
+    <string name="user_hint">User search</string>
 
     <string name="menu_user">User</string>
     <string name="menu_teams">Teams</string>
     <string name="menu_schedule">Schedule</string>
 
     <string name="txt_team">Teams</string>
+    <string name="txt_points">P</string>
+    <string name="txt_wins">W</string>
+    <string name="txt_losses">L</string>
+    <string name="txt_draws">D</string>
+    <string name="txt_points_hint">Total points</string>
+    <string name="txt_wins_hint">Total wins</string>
+    <string name="txt_losses_hint">Total losses</string>
+    <string name="txt_draws_hint">Total draws</string>
+    <string name="txt_standing_years">Standing year</string>
 </resources>

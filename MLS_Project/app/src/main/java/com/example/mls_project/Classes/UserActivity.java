@@ -3,7 +3,6 @@ package com.example.mls_project.Classes;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,13 +14,14 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.AdapterView;
+import android.widget.Toast;
 
 import com.example.mls_project.Database.ConnectionSQL;
+import com.example.mls_project.Entities.User;
 import com.example.mls_project.R;
 import com.example.mls_project.Models.UserAdapter;
 import com.example.mls_project.databinding.ActivityUserBinding;
-
+import com.google.android.material.tabs.TabLayout;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -30,10 +30,11 @@ public class UserActivity extends AppCompatActivity {
 
     private ActivityUserBinding binding;
     private RecyclerView.Adapter adapter;
-    private List<String> list;
+    private List<User> userList;
     private final ConnectionSQL con = new ConnectionSQL();
     private static String admin = "";
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,37 +42,36 @@ public class UserActivity extends AppCompatActivity {
         View view = binding.getRoot();
         setContentView(view);
 
-        //Getting user list from database
-        try {
-            list = con.userList(1);
-        }
-        catch (Exception e) {
-            Log.e("Error", e.getMessage());
-        }
+        popUserList(1);
 
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
-        binding.rvUserItems.setLayoutManager(layoutManager);
-        adapter = new UserAdapter(this, list, binding.spnStatus);
-        binding.rvUserItems.setAdapter(adapter);
-
-        //Replacing user list when spinner selection changes
-        binding.spnStatus.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        binding.tabLayoutUser.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                list.clear();
-                if (binding.spnStatus.getSelectedItemPosition() == 0) {
-                    list = con.userList(1); //Active
+            public void onTabSelected(TabLayout.Tab tab) {
+                switch (tab.getPosition()){
+                    case 0:
+                        popUserList(1);
+                        break;
+                    case 1:
+                        popUserList(0);
+                        break;
                 }
-                else {
-                    list = con.userList(0); //Active
-                }
-                adapter = new UserAdapter(UserActivity.this, list, binding.spnStatus);
-                binding.rvUserItems.setAdapter(adapter);
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {
+            public void onTabUnselected(TabLayout.Tab tab) {
 
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+                switch (tab.getPosition()){
+                    case 0:
+                        popUserList(1);
+                        break;
+                    case 1:
+                        popUserList(0);
+                        break;
+                }
             }
         });
 
@@ -84,21 +84,22 @@ public class UserActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                List<String> userSearch = new ArrayList<>();
+                List<User> userSearch = new ArrayList<>();
                 if (s.length() > 0) {
-                    for (int i = 0; i < list.size(); i++) {
-                        String data = list.get(i).toLowerCase(Locale.ROOT);
+                    for (int i = 0; i < userList.size(); i++) {
+                        User user = userList.get(i);
+                        String data = user.getEmail().toLowerCase(Locale.ROOT);
                         if (data.contains(binding.edtUserSearch.getText().toString().toLowerCase(Locale.ROOT))) {
-                            userSearch.add(list.get(i));
+                            userSearch.add(user);
                         }
                     }
-                    if (!userSearch.isEmpty()) {
-                        adapter = new UserAdapter(UserActivity.this, userSearch, binding.spnStatus);
-                    binding.rvUserItems.setAdapter(adapter);
-                    }
+//                    if (!userSearch.isEmpty()) {
+                        adapter = new UserAdapter(UserActivity.this, userSearch, binding.tabLayoutUser);
+                        binding.rvUserItems.setAdapter(adapter);
+//                    }
                 }
                 else {
-                    adapter = new UserAdapter(UserActivity.this, list, binding.spnStatus);
+                    adapter = new UserAdapter(UserActivity.this, userList, binding.tabLayoutUser);
                     binding.rvUserItems.setAdapter(adapter);
                 }
             }
@@ -115,13 +116,26 @@ public class UserActivity extends AppCompatActivity {
             if(event.getAction() == MotionEvent.ACTION_UP) {
                 if(event.getRawX() >= (binding.edtUserSearch.getRight() - binding.edtUserSearch.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
                     binding.edtUserSearch.getText().clear();
-                    adapter = new UserAdapter(UserActivity.this, list, binding.spnStatus);
+                    adapter = new UserAdapter(UserActivity.this, userList, binding.tabLayoutUser);
                     binding.rvUserItems.setAdapter(adapter);
                     return true;
                 }
             }
             return false;
         });
+    }
+
+    private void popUserList (int userStatus) {
+        try {
+            userList = con.userList(userStatus);
+            binding.rvUserItems.setLayoutManager(new LinearLayoutManager(UserActivity.this));
+            adapter = new UserAdapter(UserActivity.this, userList, binding.tabLayoutUser);
+            binding.rvUserItems.setAdapter(adapter);
+        }
+        catch (Exception e) {
+            Toast.makeText(this, "Error getting user list", Toast.LENGTH_LONG).show();
+            Log.e("Error", e.getMessage());
+        }
     }
 
     @Override
@@ -132,7 +146,7 @@ public class UserActivity extends AppCompatActivity {
         //Getting info about user privileges
         Bundle extras = getIntent().getExtras();
         admin = extras.getString("Admin");
-        if (!admin.equals("1")){
+        if (!admin.equals("Yes")){
             menu.findItem(R.id.menu_user).setVisible(false);
         }
 

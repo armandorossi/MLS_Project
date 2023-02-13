@@ -19,20 +19,97 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:gravity="start"
-        android:layout_marginStart="20dp">
+        android:layout_marginStart="5dp">
         <ImageView
             android:id="@+id/img_team"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:src="@drawable/logo"
             android:contentDescription="@string/txt_f_team_name" />
+
         <TextView
             android:id="@+id/txt_team_name"
-            android:layout_width="wrap_content"
+            android:layout_width="130dp"
             android:layout_height="wrap_content"
-            android:text="@string/txt_f_team_name"
             android:layout_gravity="center_vertical"
-            android:layout_marginStart="10dp"/>
+            android:layout_marginStart="10dp"
+            android:maxLines="2"
+            android:text="@string/txt_f_team_name"
+            android:textColor="#757575" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginStart="10dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/txtPoints"
+                    android:layout_width="20dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="45dp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:text="@string/txt_points"/>
+                <TextView
+                    android:id="@+id/txtWins"
+                    android:layout_width="20dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:text="@string/txt_wins"/>
+                <TextView
+                    android:id="@+id/txtLosses"
+                    android:layout_width="20dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:text="@string/txt_losses"/>
+                <TextView
+                    android:id="@+id/txtDraws"
+                    android:layout_width="20dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:text="@string/txt_draws"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/txtYear1"
+                    android:layout_width="35dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"/>
+                <TextView
+                    android:id="@+id/txtPoints1"
+                    android:layout_width="20dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
+                    android:gravity="center"/>
+                <TextView
+                    android:id="@+id/txtWins1"
+                    android:layout_width="20dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
+                    android:gravity="center"/>
+                <TextView
+                    android:id="@+id/txtLosses1"
+                    android:layout_width="20dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
+                    android:gravity="center"/>
+                <TextView
+                    android:id="@+id/txtDraws1"
+                    android:layout_width="20dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"/>
+            </LinearLayout>
+        </LinearLayout>
     </LinearLayout>
 
 </androidx.cardview.widget.CardView>

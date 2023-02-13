@@ -10,6 +10,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.mls_project.Classes.TeamScheduleActivity;
+import com.example.mls_project.Entities.Team;
+import com.example.mls_project.Entities.TeamStandings;
 import com.example.mls_project.R;
 import java.text.Normalizer;
 import java.util.List;
@@ -17,11 +19,13 @@ import java.util.Locale;
 
 public class TeamAdapter extends RecyclerView.Adapter<TeamAdapter.ViewHolder> {
     private final Context context;
-    private final List<String> list;
+    private final List<Team> teamList;
+    private final List<TeamStandings> teamStandingsList;
 
-    public TeamAdapter(Context current, List<String> list) {
+    public TeamAdapter(Context current, List<Team> teamList, List<TeamStandings> teamStandingsList) {
         this.context = current;
-        this.list = list;
+        this.teamList = teamList;
+        this.teamStandingsList = teamStandingsList;
     }
 
     @NonNull
@@ -33,27 +37,44 @@ public class TeamAdapter extends RecyclerView.Adapter<TeamAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull TeamAdapter.ViewHolder holder, int position) {
-        holder.txt_team_name.setText(list.get(position));
-        String t1 = Normalizer.normalize(list.get(position).toLowerCase(Locale.ROOT).replace(" ", "_").replace(".", ""), Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
+        Team team = teamList.get(position);
+        holder.txt_team_name.setText(team.getTeamName());
+        String t1 = Normalizer.normalize(team.getTeamName().toLowerCase(Locale.ROOT).replace(" ", "_").replace(".", ""), Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
         holder.img_team.setImageResource(context.getResources().getIdentifier(t1, "drawable", context.getPackageName()));
+
+        TeamStandings teamStandings;
+        for (int i = 0; i < teamStandingsList.size(); i ++) {
+            teamStandings = teamStandingsList.get(i);
+            if (teamStandings.getTeamName().equals(team.getTeamShortName())) {
+                holder.txt_year1.setText(teamStandings.getCompetitionYear());
+                holder.txt_points1.setText(teamStandings.getTotalPoints());
+                holder.txt_wins1.setText(teamStandings.getTotalWins());
+                holder.txt_losses1.setText(teamStandings.getTotalLosses());
+                holder.txt_draws1.setText(teamStandings.getTotalDraws());
+            }
+        }
     }
 
     @Override
     public int getItemCount() {
-        return list.size();
+        return teamList.size();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView txt_team_name;
+        TextView txt_team_name, txt_year1, txt_points1, txt_wins1, txt_losses1, txt_draws1;
         ImageView img_team;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             txt_team_name = itemView.findViewById(R.id.txt_team_name);
+            txt_year1 = itemView.findViewById(R.id.txtYear1);
+            txt_points1 = itemView.findViewById(R.id.txtPoints1);
+            txt_wins1 = itemView.findViewById(R.id.txtWins1);
+            txt_losses1 = itemView.findViewById(R.id.txtLosses1);
+            txt_draws1 = itemView.findViewById(R.id.txtDraws1);
             img_team = itemView.findViewById(R.id.img_team);
 
             itemView.setOnClickListener((View v) -> {
                 Intent teamScheduleIntent = new Intent(itemView.getContext(), TeamScheduleActivity.class);
-//                teamScheduleIntent.putExtra("Admin", admin);
                 teamScheduleIntent.putExtra("TeamName", txt_team_name.getText());
                 itemView.getContext().startActivity(teamScheduleIntent);
             });

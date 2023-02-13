@@ -6,75 +6,68 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.mls_project.Database.ConnectionSQL;
+import com.example.mls_project.Entities.User;
 import com.example.mls_project.R;
-
+import com.google.android.material.tabs.TabLayout;
 import java.util.List;
+import java.util.Objects;
 
 public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
 
     private final Context context;
-    private final List<String> list;
-    private final Spinner spn;
+    private final List<User> userList;
+    TabLayout tabLayoutUser;
 
-    public UserAdapter(Context current, List<String> list, Spinner spn) {
+    public UserAdapter(Context current, List<User> userList, TabLayout tabLayoutUser) {
         this.context = current;
-        this.list = list;
-        this.spn = spn;
+        this.userList = userList;
+        this.tabLayoutUser = tabLayoutUser;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType){
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.user_item, viewGroup, false);
-        return new ViewHolder(v, context, this.spn);
+        return new ViewHolder(v, context, tabLayoutUser);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        String[] userList = list.get(position).split(";");
-        holder.fullName.setText(userList[0]); //Full name
-        holder.email.setText(userList[1]); //Email
-        String text;
-        if (userList[2].equals("1")) { //Admin - Yes or No
-            text = "Yes";
+        User user = userList.get(position);
+        holder.fullName.setText(user.getFullName());
+        holder.email.setText(user.getEmail());
+        holder.admin.setText(user.getAdmin());
+        holder.status.setText(user.getStatus());
+
+        if (user.getAdmin().equals("Yes")) {
             holder.admin.setTextColor(Color.RED);
         }
-        else {
-            text = "No";
-            holder.admin.setTextColor(Color.BLUE);
-        }
-        holder.admin.setText(text);
 
-        if (userList[3].equals("1")) { //Status - Yes or No
-            text = "Active";
-            holder.status.setTextColor(Color.BLUE);
+        if (user.getStatus().equals("Active")) {
             holder.padlock.setImageResource(R.drawable.padlock_closed);
         }
         else {
-            text = "Inactive";
             holder.status.setTextColor(Color.RED);
             holder.padlock.setImageResource(R.drawable.padlock_open);
         }
-        holder.status.setText(text);
     }
 
     @Override
     public int getItemCount() {
-        return list.size();
+        return userList.size();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView fullName, email, admin, status;
         ImageView padlock;
-        public ViewHolder(@NonNull View itemView, Context context, Spinner spn) {
+        public ViewHolder(@NonNull View itemView, Context context, TabLayout tabLayoutUser) {
             super(itemView);
             fullName = itemView.findViewById(R.id.txt_user_full_name);
             email = itemView.findViewById(R.id.txt_user_email);
@@ -82,7 +75,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
             status = itemView.findViewById(R.id.txt_user_status_nd);
             padlock = itemView.findViewById(R.id.user_padlock);
             padlock.setOnClickListener(v -> {
-                if (padlock.getDrawable().getConstantState() == context.getResources().getDrawable( R.drawable.padlock_closed).getConstantState()) {
+                if (padlock.getDrawable().getConstantState() == Objects.requireNonNull(ResourcesCompat.getDrawable(context.getResources(), R.drawable.padlock_closed, context.getTheme())).getConstantState()) {
                     new AlertDialog.Builder(context)
                             .setIcon(android.R.drawable.ic_dialog_alert)
                             .setTitle("User status")
@@ -91,7 +84,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
                                 ConnectionSQL con = new ConnectionSQL();
                                 if (con.updateUserStatus(email.getText().toString(), 0) > 0) {
                                     Toast.makeText(context, fullName.getText().toString() + " deactivated.", Toast.LENGTH_LONG).show();
-                                    spn.setSelection(1);
+                                    tabLayoutUser.selectTab(tabLayoutUser.getTabAt(0));
                                 }
                                 else {
                                     Toast.makeText(context, "Something went wrong while trying to deactivate this user", Toast.LENGTH_LONG).show();
@@ -109,7 +102,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
                                 ConnectionSQL con = new ConnectionSQL();
                                 if (con.updateUserStatus(email.getText().toString(), 1) > 0) {
                                     Toast.makeText(context, fullName.getText().toString() + " activated.", Toast.LENGTH_LONG).show();
-                                    spn.setSelection(0);
+                                    tabLayoutUser.selectTab(tabLayoutUser.getTabAt(1));
                                 }
                                 else {
                                     Toast.makeText(context, "Something went wrong while trying to activate this user", Toast.LENGTH_LONG).show();

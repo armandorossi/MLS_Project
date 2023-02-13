@@ -18,6 +18,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import com.example.mls_project.Database.ConnectionSQL;
+import com.example.mls_project.Entities.Schedule;
 import com.example.mls_project.R;
 import com.example.mls_project.Models.ScheduleAdapter;
 import com.example.mls_project.databinding.ActivityScheduleBinding;
@@ -30,7 +31,7 @@ public class ScheduleActivity extends AppCompatActivity {
 
     private ActivityScheduleBinding binding;
     private RecyclerView.Adapter<ScheduleAdapter.ViewHolder> adapter;
-    private List<String> list = new ArrayList<>();
+    private List<Schedule> scheduleList = new ArrayList<>();
     private final Date today = new Date();
     private final Calendar cal = Calendar.getInstance();
     private final ConnectionSQL con = new ConnectionSQL();
@@ -59,7 +60,7 @@ public class ScheduleActivity extends AppCompatActivity {
             binding.spnMonth.setAdapter(monthList);
             binding.spnMonth.setSelection(((ArrayAdapter<String>)binding.spnMonth.getAdapter()).getPosition(String.valueOf(Calendar.getInstance().get(Calendar.MONTH)+2)));
 
-            list = con.scheduleList(Integer.parseInt(binding.spnYear.getSelectedItem().toString()), Integer.parseInt(binding.spnMonth.getSelectedItem().toString()));
+            scheduleList = con.scheduleList(Integer.parseInt(binding.spnYear.getSelectedItem().toString()), Integer.parseInt(binding.spnMonth.getSelectedItem().toString()));
         }
         catch (Exception e) {
             Log.e("Error", e.getMessage());
@@ -67,18 +68,18 @@ public class ScheduleActivity extends AppCompatActivity {
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         binding.rvScheduleItems.setLayoutManager(layoutManager);
-        adapter = new ScheduleAdapter(this, list);
+        adapter = new ScheduleAdapter(this, scheduleList);
         binding.rvScheduleItems.setAdapter(adapter);
 
         //Refreshing data when a different year is selected
         binding.spnYear.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                list.clear();
-                list = con.scheduleList(Integer.parseInt(binding.spnYear.getSelectedItem().toString()), Integer.parseInt(binding.spnMonth.getSelectedItem().toString()));
-                adapter = new ScheduleAdapter(ScheduleActivity.this, list);
+                scheduleList.clear();
+                scheduleList = con.scheduleList(Integer.parseInt(binding.spnYear.getSelectedItem().toString()), Integer.parseInt(binding.spnMonth.getSelectedItem().toString()));
+                adapter = new ScheduleAdapter(ScheduleActivity.this, scheduleList);
                 binding.rvScheduleItems.setAdapter(adapter);
-                if (list.size() == 0) {
+                if (scheduleList.size() == 0) {
                     Toast.makeText(ScheduleActivity.this, "No games found for the selected period", Toast.LENGTH_LONG).show();
                 }
             }
@@ -93,11 +94,11 @@ public class ScheduleActivity extends AppCompatActivity {
         binding.spnMonth.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                list.clear();
-                list = con.scheduleList(Integer.parseInt(binding.spnYear.getSelectedItem().toString()), Integer.parseInt(binding.spnMonth.getSelectedItem().toString()));
-                adapter = new ScheduleAdapter(ScheduleActivity.this, list);
+                scheduleList.clear();
+                scheduleList = con.scheduleList(Integer.parseInt(binding.spnYear.getSelectedItem().toString()), Integer.parseInt(binding.spnMonth.getSelectedItem().toString()));
+                adapter = new ScheduleAdapter(ScheduleActivity.this, scheduleList);
                 binding.rvScheduleItems.setAdapter(adapter);
-                if (list.size() == 0) {
+                if (scheduleList.size() == 0) {
                     Toast.makeText(ScheduleActivity.this, "No games found for the selected period", Toast.LENGTH_LONG).show();
                 }
             }
@@ -129,7 +130,7 @@ public class ScheduleActivity extends AppCompatActivity {
         //Getting info about user privileges
         Bundle extras = getIntent().getExtras();
         admin = extras.getString("Admin");
-        if (!admin.equals("1")){
+        if (!admin.equals("Yes")){
             menu.findItem(R.id.menu_user).setVisible(false);
         }
 

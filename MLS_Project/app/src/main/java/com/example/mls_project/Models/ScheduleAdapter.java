@@ -1,6 +1,7 @@
 package com.example.mls_project.Models;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.mls_project.Entities.Schedule;
 import com.example.mls_project.R;
 
 import java.text.Normalizer;
@@ -18,11 +20,11 @@ import java.util.Locale;
 public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHolder>{
 
     private final Context context;
-    private final List<String> list;
+    private final List<Schedule> scheduleList;
 
-    public ScheduleAdapter(Context current, List<String> list) {
+    public ScheduleAdapter(Context current, List<Schedule> scheduleList) {
         this.context = current;
-        this.list = list;
+        this.scheduleList = scheduleList;
     }
 
     @NonNull
@@ -34,39 +36,36 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        String[] scheduleList = list.get(position).split(";");
-        holder.date.setText(scheduleList[0]); //Date
-        holder.teamOne.setText(scheduleList[1]); //First team
-        holder.teamTwo.setText(scheduleList[2]); //Second team
-        if (scheduleList[3].equals("null")){ //Schedule time
-            holder.time.setText("-");
+        Schedule schedule = scheduleList.get(position);
+        holder.date.setText(schedule.getScheduleDate());
+        holder.teamOne.setText(schedule.getHomeTeamName());
+        holder.teamTwo.setText(schedule.getAwayTeamName());
+        if (schedule.getScheduleTime() == null) {
+            holder.time.setVisibility(View.GONE);
         }
         else {
-            holder.time.setText(scheduleList[3].substring(0, 5));
+            holder.time.setText(schedule.getScheduleTime().substring(0, 5));
         }
-        String text;
-        if (scheduleList[4].equals("null")) { //Real score
+        if (schedule.getScore() == null) {
+            holder.txt_score.setVisibility(View.GONE);
             holder.score.setVisibility(View.GONE);
-            text = context.getResources().getString(R.string.txt_score_real) + " -";
         }
         else {
-            text = context.getResources().getString(R.string.txt_score_real) + " " + scheduleList[4];
+            holder.score.setText(schedule.getScore());
         }
-        holder.score.setText(text);
-        //Removing accents from team names to match image names
-        String t1 = Normalizer.normalize(scheduleList[5].toLowerCase(Locale.ROOT).replace(" ", "_").replace(".", ""), Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
-        String t2 = Normalizer.normalize(scheduleList[6].toLowerCase(Locale.ROOT).replace(" ", "_").replace(".", ""), Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
+        String t1 = Normalizer.normalize(schedule.getHomeClubName().toLowerCase(Locale.ROOT).replace(" ", "_").replace(".", ""), Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
+        String t2 = Normalizer.normalize(schedule.getAwayClubName().toLowerCase(Locale.ROOT).replace(" ", "_").replace(".", ""), Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
         holder.imgOne.setImageResource(context.getResources().getIdentifier(t1, "drawable", context.getPackageName()));
         holder.imgTwo.setImageResource(context.getResources().getIdentifier(t2, "drawable", context.getPackageName()));
     }
 
     @Override
     public int getItemCount() {
-        return list.size();
+        return scheduleList.size();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView date, teamOne, teamTwo, time, score, predicted;
+        TextView date, teamOne, teamTwo, time, txt_score, score, txt_prediction, prediction;
         ImageView imgOne, imgTwo;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -74,8 +73,10 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHo
             teamOne = itemView.findViewById(R.id.txt_f_team_name);
             teamTwo = itemView.findViewById(R.id.txt_s_team_name);
             time = itemView.findViewById(R.id.txt_schedule_time);
+            txt_score = itemView.findViewById(R.id.txt_score);
             score = itemView.findViewById(R.id.txt_score_real);
-            predicted = itemView.findViewById(R.id.txt_score_predicted);
+            prediction = itemView.findViewById(R.id.txt_score_prediction);
+            txt_prediction = itemView.findViewById(R.id.txt_prediction);
             imgOne = itemView.findViewById(R.id.img_f_team);
             imgTwo = itemView.findViewById(R.id.img_s_team);
         }

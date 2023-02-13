@@ -33,6 +33,18 @@ public class LoginActivity extends AppCompatActivity {
             Intent registerIntent = new Intent(this, RegisterActivity.class);
             startForResult.launch(registerIntent);
         });
+
+        binding.btnAdmin.setOnClickListener((View v) -> {
+            binding.edtUsername.setText("armandorossi@hotmail.com");
+            binding.edtPassword.setText("Ar@123456");
+            binding.btnLogin.callOnClick();
+        });
+
+        binding.btnTest.setOnClickListener((View v) -> {
+            binding.edtUsername.setText("test@gmail.com");
+            binding.edtPassword.setText("Te@123456");
+            binding.btnLogin.callOnClick();
+        });
     }
 
     //Method responsible for retrieving the username from RegisterActivity when a new user is registered and set the edtUsername with this information
@@ -56,8 +68,8 @@ public class LoginActivity extends AppCompatActivity {
 //        HashPassword hashPassword = new HashPassword();
         try {
             String[] result = con.loginConnection(binding.edtUsername.getText().toString(), HashPassword.hashAPassword(binding.edtPassword.getText().toString())).split(";");
-            if (result[0].equals("1")) {
-                if (result[2].equals("1")){
+            if (result[0].equals("Yes")) {
+                if (result[2].equals("Yes")){
                     Intent userIntent = new Intent(this, UserActivity.class);
                     userIntent.putExtra("Admin", result[2]);
                     startActivity(userIntent);

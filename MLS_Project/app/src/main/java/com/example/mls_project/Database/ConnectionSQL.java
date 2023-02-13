@@ -4,22 +4,24 @@ import android.content.Context;
 import android.os.StrictMode;
 import android.util.Log;
 import android.widget.Toast;
-
 import com.example.mls_project.BuildConfig;
-
+import com.example.mls_project.Entities.Schedule;
+import com.example.mls_project.Entities.Team;
+import com.example.mls_project.Entities.TeamStandings;
+import com.example.mls_project.Entities.User;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class ConnectionSQL {
 
-    private static final String url = BuildConfig.URL;//"jdbc:mysql://sql487.main-hosting.eu/u842004852_mlsproject_db";
-    private static final String user = BuildConfig.USER;//"u842004852_mlsproject_use";
-    private static final String pass = BuildConfig.KEY;//"vknP=j8O&a";
+    private static final String url = BuildConfig.URL;
+    private static final String user = BuildConfig.USER;
+    private static final String pass = BuildConfig.KEY;
 
     //Method to create a connection and return it to other methods
     private Connection SQLConnection() {
@@ -39,10 +41,11 @@ public class ConnectionSQL {
 
     //Method to get a connection with the database and retrieve a specific user by username and password (encrypted)
     public String loginConnection (String username, String password) {
-        String result = "1;Login accepted";
+        String result = "Yes;Login accepted";
         try {
             Connection con = SQLConnection();
-            PreparedStatement ps = con.prepareStatement("SELECT USER_EMAIL, USER_STATUS, USER_ADMIN " +
+            assert con != null;
+            PreparedStatement ps = con.prepareStatement("SELECT USER_EMAIL, USER_STATUS, IF(USER_ADMIN = 1, 'Yes', 'No') USER_ADMIN " +
                     "FROM USERS " +
                     "WHERE USER_EMAIL = ? AND USER_PASSWORD = ?");
             ps.setString(1, username);
@@ -50,22 +53,22 @@ public class ConnectionSQL {
             ResultSet rs = ps.executeQuery();
             if (rs.next()){
                 if (!rs.getString(1).equals(username)) {
-                    result = "0;Username not found;";
+                    result = "No;Username not found;";
                 }
                 else if (rs.getInt(2) == 0) { //User deactivated
-                    result = "0;Your profile is deactivated;";
+                    result = "No;Your profile is deactivated;";
                 }
                 else {
                     result += ";" + rs.getString(3);
                 }
             }
             else {
-                result = "0;Username or password incorrect;";
+                result = "No;Username or password incorrect;";
             }
             con.close();
         }
         catch (Exception e) {
-            result = "0;" + e.getMessage() + ";";
+            result = "No;" + e.getMessage() + ";";
         }
         return result;
     }
@@ -75,6 +78,7 @@ public class ConnectionSQL {
         boolean result = true;
         try {
             Connection con = SQLConnection();
+            assert con != null;
             PreparedStatement ps = con.prepareStatement("INSERT INTO USERS (FIRST_NAME, LAST_NAME, USER_EMAIL, USER_PASSWORD, USER_ADMIN, USER_STATUS) " +
                     "VALUES (?, ?, ?, ?, ?, ?)");
             ps.setString(1, firstName);
@@ -92,7 +96,7 @@ public class ConnectionSQL {
             con.close();
         }
         catch (Exception e) {
-            if (e.getMessage().contains("Duplicate entry")) { //Checking if the user is already registered
+            if (Objects.requireNonNull(e.getMessage()).contains("Duplicate entry")) { //Checking if the user is already registered
                 Toast.makeText(context, "Username already exists", Toast.LENGTH_LONG).show();
             }
             result = false;
@@ -105,6 +109,7 @@ public class ConnectionSQL {
         List<String> list = new ArrayList<>();
         try {
             Connection con = SQLConnection();
+            assert con != null;
             PreparedStatement ps = con.prepareStatement("SELECT DISTINCT(YEAR(SCHEDULE_DATE)) YEAR " +
                     "FROM SCHEDULE " +
                     "ORDER BY YEAR DESC");
@@ -123,10 +128,11 @@ public class ConnectionSQL {
     }
 
     //Method to return a list of games for a specific year and month
-    public List<String> scheduleList (int year, int month) {
-        List<String> list = new ArrayList<>();
+    public List<Schedule> scheduleList (int year, int month) {
+        List<Schedule> scheduleList = new ArrayList<>();
         try {
             Connection con = SQLConnection();
+            assert con != null;
             PreparedStatement ps = con.prepareStatement("SELECT S.SCHEDULE_DATE, S.F_TEAM_NAME, S.S_TEAM_NAME, S.SCHEDULE_TIME, S.SCORE, T1.TEAM_NAME, T2.TEAM_NAME " +
                     "FROM SCHEDULE S " +
                     "INNER JOIN TEAMS T1 ON S.F_TEAM_NAME = T1.TEAM_SHORT_NAME " +
@@ -135,67 +141,49 @@ public class ConnectionSQL {
                     "ORDER BY SCHEDULE_DATE, SCHEDULE_TIME");
             ps.setInt(1, year);
             ps.setInt(2, month);
-
             ResultSet rs = ps.executeQuery();
-            ResultSetMetaData rsmd = rs.getMetaData();
             while (rs.next()){
-                String value = "";
-                for (int i = 1; i <= rsmd.getColumnCount(); i++) {
-                    if (i == 1) {
-                        value = rs.getString(i);
-                    }
-                    else {
-                        value += ";" + rs.getString(i);
-                    }
-                }
-                list.add(value);
+                Schedule schedule = new Schedule(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7));
+                scheduleList.add(schedule);
             }
-            con.close();
         }
         catch (Exception e) {
-            list = null;
+            scheduleList = null;
             Log.e("Error", e.getMessage());
         }
-        return list;
+        return scheduleList;
     }
 
     //Method to return a user list from database
-    public List<String> userList (int userStatus) {
-        List<String> list = new ArrayList<>();
+    public List<User> userList (int userStatus) {
+        List<User> userList = new ArrayList<>();
+
         try {
             Connection con = SQLConnection();
-            PreparedStatement ps = con.prepareStatement("SELECT CONCAT(FIRST_NAME, ' ', LAST_NAME) FULL_NAME, USER_EMAIL, USER_ADMIN, USER_STATUS " +
+            assert con != null;
+            PreparedStatement ps = con.prepareStatement("SELECT CONCAT(FIRST_NAME, ' ', LAST_NAME) FULL_NAME, USER_EMAIL, IF(USER_ADMIN = 1, 'Yes', 'No') USER_ADMIN, IF(USER_STATUS = 1, 'Active', 'Inactive') USER_STATUS " +
                     "FROM USERS WHERE USER_STATUS = ? " +
                     "ORDER BY FIRST_NAME");
             ps.setInt(1, userStatus);
 
             ResultSet rs = ps.executeQuery();
-            ResultSetMetaData rsmd = rs.getMetaData();
             while (rs.next()) {
-                String value = "";
-                for (int i = 1; i <= rsmd.getColumnCount(); i++) {
-                    if (i == 1) {
-                        value = rs.getString(i);
-                    }
-                    else {
-                        value += ";" + rs.getString(i);
-                    }
-                }
-                list.add(value);
+                User user = new User(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4));
+                userList.add(user);
             }
-            con.close();
         }
         catch (Exception e) {
-            list = null;
+            userList = null;
             Log.e("Error", e.getMessage());
         }
-        return list;
+        return userList;
     }
 
     //Method to update a user status (Active or Inactive)
     public int updateUserStatus (String email, int status) {
         try {
             Connection con = SQLConnection();
+            assert con != null;
             PreparedStatement ps = con.prepareStatement("UPDATE USERS SET USER_STATUS = ? WHERE USER_EMAIL = ?");
             ps.setInt(1, status);
             ps.setString(2, email);
@@ -209,38 +197,30 @@ public class ConnectionSQL {
         }
     }
 
-    public List<String> teamList () {
-        List<String> list = new ArrayList<>();
+    public List<Team> teamList () {
+        List<Team> teamList = new ArrayList<>();
         try {
             Connection con = SQLConnection();
-            PreparedStatement ps = con.prepareStatement("SELECT TEAM_NAME FROM TEAMS ORDER BY TEAM_NAME");
+            assert con != null;
+            PreparedStatement ps = con.prepareStatement("SELECT TEAM_NAME, TEAM_SHORT_NAME FROM TEAMS ORDER BY TEAM_NAME");
             ResultSet rs = ps.executeQuery();
-            ResultSetMetaData rsmd = rs.getMetaData();
             while (rs.next()) {
-                String value = "";
-                for (int i = 1; i <= rsmd.getColumnCount(); i++) {
-                    if (i == 1) {
-                        value = rs.getString(i);
-                    }
-                    else {
-                        value += ";" + rs.getString(i);
-                    }
-                }
-                list.add(value);
+                Team team = new Team(rs.getString(1), rs.getString(2));
+                teamList.add(team);
             }
-            con.close();
         }
         catch (Exception e) {
-            list = null;
+            teamList = null;
             Log.e("Error", e.getMessage());
         }
-        return list;
+        return teamList;
     }
 
-    public List<String> teamSchedule (String teamName, String date) {
-        List<String> list = new ArrayList<>();
+    public List<Schedule> teamSchedule (String teamName, String date) {
+        List<Schedule> teamScheduleList = new ArrayList<>();
         try {
             Connection con = SQLConnection();
+            assert con != null;
             PreparedStatement ps = con.prepareStatement("SELECT S.SCHEDULE_DATE, S.F_TEAM_NAME, S.S_TEAM_NAME, S.SCHEDULE_TIME, S.SCORE, T1.TEAM_NAME, T2.TEAM_NAME " +
                     "FROM SCHEDULE S " +
                     "INNER JOIN TEAMS T1 ON S.F_TEAM_NAME = T1.TEAM_SHORT_NAME " +
@@ -251,25 +231,38 @@ public class ConnectionSQL {
             ps.setString(2, teamName);
             ps.setString(3, teamName);
             ResultSet rs = ps.executeQuery();
-            ResultSetMetaData rsmd = rs.getMetaData();
             while (rs.next()) {
-                String value = "";
-                for (int i = 1; i <= rsmd.getColumnCount(); i++) {
-                    if (i == 1) {
-                        value = rs.getString(i);
-                    }
-                    else {
-                        value += ";" + rs.getString(i);
-                    }
-                }
-                list.add(value);
+                Schedule schedule = new Schedule(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7));
+                teamScheduleList.add(schedule);
             }
-            con.close();
         }
         catch (Exception e) {
-            list = null;
+            teamScheduleList = null;
             Log.e("Error", e.getMessage());
         }
-        return list;
+        return teamScheduleList;
+    }
+
+    public List<TeamStandings> teamStandings (String year) {
+        List<TeamStandings> teamStandingsList = new ArrayList<>();
+        try {
+            Connection con = SQLConnection();
+            assert con != null;
+            PreparedStatement ps = con.prepareStatement("SELECT T.TEAM_SHORT_NAME, IFNULL(S.COMPETITION_YEAR, 'N/A'), S.TOTAL_POINTS, S.TOTAL_WINS, S.TOTAL_LOSSES, S.TOTAL_DRAWS " +
+                    "FROM TEAMS T " +
+                    "LEFT JOIN STANDINGS S ON T.TEAM_SHORT_NAME = S.TEAM_NAME AND S.COMPETITION_YEAR = ? " +
+                    "ORDER BY T.TEAM_SHORT_NAME, S.COMPETITION_YEAR");
+            ps.setString(1, year);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                TeamStandings teamWins = new TeamStandings(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6));
+                teamStandingsList.add(teamWins);
+            }
+        }
+        catch (Exception e) {
+            teamStandingsList = null;
+            Log.e("Error", e.getMessage());
+        }
+        return teamStandingsList;
     }
 }

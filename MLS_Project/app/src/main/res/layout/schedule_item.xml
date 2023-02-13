@@ -34,7 +34,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/txt_schedule_time"
-                android:layout_marginEnd="20dp"
                 android:textStyle="bold"/>
         </LinearLayout>
         <LinearLayout
@@ -49,13 +48,15 @@
                 android:src="@drawable/logo"
                 android:layout_gravity="start"
                 android:contentDescription="@string/txt_f_team_name" />
+
             <TextView
                 android:id="@+id/txt_f_team_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/txt_f_team_name"
                 android:layout_gravity="center_vertical"
-                android:layout_marginStart="10dp"/>
+                android:layout_marginStart="10dp"
+                android:text="@string/txt_f_team_name"
+                android:textColor="#757575" />
             <TextView
                 android:id="@+id/txt_versus"
                 android:layout_width="wrap_content"
@@ -65,13 +66,15 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
                 android:textStyle="bold"/>
+
             <TextView
                 android:id="@+id/txt_s_team_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/txt_s_team_name"
                 android:layout_gravity="center_vertical"
-                android:layout_marginEnd="10dp"/>
+                android:layout_marginEnd="10dp"
+                android:text="@string/txt_s_team_name"
+                android:textColor="#757575" />
             <ImageView
                 android:id="@+id/img_s_team"
                 android:layout_width="50dp"
@@ -84,17 +87,39 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:gravity="center">
+
+            <TextView
+                android:id="@+id/txt_score"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"
+                android:text="@string/txt_score_real"
+                android:textStyle="bold"
+                android:textColor="#757575" />
             <TextView
                 android:id="@+id/txt_score_real"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="20dp"
                 android:text="@string/txt_score_real"
-                android:layout_marginEnd="20dp"/>
+                android:textStyle="bold"
+                android:textColor="#0000FF" />
+
             <TextView
-                android:id="@+id/txt_score_predicted"
+                android:id="@+id/txt_prediction"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/txt_score_predicted"/>
+                android:layout_marginEnd="5dp"
+                android:text="@string/txt_score_predicted"
+                android:textStyle="bold"
+                android:textColor="#757575" />
+            <TextView
+                android:id="@+id/txt_score_prediction"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/txt_score_predicted"
+                android:textStyle="bold"
+                android:textColor="#0000FF" />
         </LinearLayout>
 
     </androidx.appcompat.widget.LinearLayoutCompat>

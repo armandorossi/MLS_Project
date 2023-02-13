@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.os.Bundle;
 import android.view.View;
 import com.example.mls_project.Database.ConnectionSQL;
+import com.example.mls_project.Entities.Schedule;
 import com.example.mls_project.Models.ScheduleAdapter;
 import com.example.mls_project.databinding.ActivityTeamScheduleBinding;
 import java.text.SimpleDateFormat;
@@ -31,14 +32,14 @@ public class TeamScheduleActivity extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         String teamName = extras.getString("TeamName");
 
-        List<String> list = con.teamSchedule(teamName, df.format(d));
+        List<Schedule> teamScheduleList = con.teamSchedule(teamName, df.format(d));
 
         String text = teamName + " - Next games";
         binding.txtTeamSchedule.setText(text);
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         binding.rvTeamScheduleItems.setLayoutManager(layoutManager);
-        RecyclerView.Adapter<ScheduleAdapter.ViewHolder> adapter = new ScheduleAdapter(this, list);
+        RecyclerView.Adapter<ScheduleAdapter.ViewHolder> adapter = new ScheduleAdapter(this, teamScheduleList);
         binding.rvTeamScheduleItems.setAdapter(adapter);
     }
 }
