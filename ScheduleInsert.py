@@ -16,12 +16,6 @@ try:
 except Error as e:
     print("Error while connecting to MySQL", e)
 
-# Connector to SQL Server
-# conn = pyodbc.connect('Driver={SQL Server};'
-#                           'Server=localhost;'
-#                           'Database=mls;'
-#                           'Trusted_Connection=yes;')
-
 # Getting the last date saved
 cursor = conn.cursor()
 # cursor.execute("SELECT REPLACE(CONVERT(VARCHAR, MAX(SCHEDULE_DATE), 103), '/', '') FROM SCHEDULE")
@@ -100,11 +94,15 @@ while (dataIn < dataOut):
                 with open('log.txt', 'a') as f:
                     f.write('\n' + Line + " - " + str(datetime.now().strftime("%d/%m/%Y %H:%M:%S")) + " SUCCESS")
             except:
+                Line = "UPDATE SCHEDULE SET SCORE = '" + Score + "' WHERE SCHEDULE_DATE = '" + GameDate.strftime("%Y-%m-%d") + "' AND F_TEAM_NAME = '" + Team1 + "' AND S_TEAM_NAME = '" + Team2 + "'"
+                cursor.execute(Line)
+                conn.commit()
                 with open('log.txt', 'a') as f:
                     f.write('\n' + Line + " - " + str(datetime.now().strftime("%d/%m/%Y %H:%M:%S")) + " FAILED")
                     f.close()
                 print("Error during insert registered to log")
             cursor.close()
+            conn.close()
 
     driver.quit()
 
