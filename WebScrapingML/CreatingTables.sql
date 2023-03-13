@@ -48,6 +48,17 @@ CREATE TABLE dbo.TableDetailsBase (
 	Season INT
 );
 
+DROP TABLE IF EXISTS TableGameDetails;
+CREATE TABLE dbo.TableGameDetails (
+    Generalkey int IDENTITY(1,1) PRIMARY KEY,
+	GAME_Date DATE NOT NULL,
+	GAME_Time TIME NOT NULL,
+	WEEK_DAY varchar(20),
+	TEAM_AWAY varchar(50),
+	TEAM_HOME varchar(50),
+	RESULT_GAME varchar(1),
+	SEASON INT NOT NULL
+);
 
 
 
