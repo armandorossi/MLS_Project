@@ -1,13 +1,13 @@
 <resources>
     <string name="app_name">MLS Research Project</string>
 
-    <string name="txt_login_page">Login</string>
+    <string name="txt_login">Login</string>
     <string name="txt_username">Username:</string>
     <string name="txt_password">Password:</string>
-    <string name="btn_login">Login</string>
     <string name="btn_register">Register</string>
     <string name="username_example">email@domain.com</string>
     <string name="password_example">********</string>
+    <string name="txt_remember">Remember me</string>
 
     <string name="txt_registration_page">Registration</string>
     <string name="txt_first_name_register">First name:</string>
@@ -59,13 +59,9 @@
     <string name="menu_schedule">Schedule</string>
 
     <string name="txt_team">Teams</string>
-    <string name="txt_points">P</string>
-    <string name="txt_wins">W</string>
-    <string name="txt_losses">L</string>
-    <string name="txt_draws">D</string>
-    <string name="txt_points_hint">Total points</string>
-    <string name="txt_wins_hint">Total wins</string>
-    <string name="txt_losses_hint">Total losses</string>
-    <string name="txt_draws_hint">Total draws</string>
+    <string name="txt_points">Points</string>
+    <string name="txt_wins">Wins</string>
+    <string name="txt_losses">Losses</string>
+    <string name="txt_draws">Draws</string>
     <string name="txt_standing_years">Standing year</string>
 </resources>

@@ -33,12 +33,14 @@
             android:textStyle="bold"
             android:layout_gravity="center_vertical"
             android:layout_marginEnd="10dp"/>
+
         <Spinner
             android:id="@+id/spn_team_year"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@string/txt_standing_years"
-            android:minHeight="32dp" />
+            android:minHeight="32dp"
+            tools:ignore="DuplicateSpeakableTextCheck,TouchTargetSizeCheck" />
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -50,5 +52,4 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
     </LinearLayout>
-
 </LinearLayout>

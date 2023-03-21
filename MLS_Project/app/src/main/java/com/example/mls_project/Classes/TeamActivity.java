@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -32,9 +31,8 @@ public class TeamActivity extends AppCompatActivity {
     private static String admin = "";
     private final Date today = new Date();
     private final Calendar cal = Calendar.getInstance();
-    private List<Team> teamList;
     private List<TeamStandings> teamStandingsList;
-    private RecyclerView.Adapter<TeamAdapter.ViewHolder> adapter;
+    private TeamAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +44,7 @@ public class TeamActivity extends AppCompatActivity {
         cal.setTime(today);
         int year = Calendar.getInstance().get(Calendar.YEAR);
 
-        teamList = con.teamList();
+        List<Team> teamList = con.teamList();
         teamStandingsList = con.teamStandings(String.valueOf(year));
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
@@ -66,8 +64,7 @@ public class TeamActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 teamStandingsList.clear();
                 teamStandingsList = con.teamStandings(binding.spnTeamYear.getSelectedItem().toString());
-                adapter = new TeamAdapter(TeamActivity.this, teamList, teamStandingsList);
-                binding.rvTeamItems.setAdapter(adapter);
+                adapter.setTeamStandingsList(teamStandingsList);
             }
 
             @Override

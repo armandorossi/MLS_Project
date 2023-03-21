@@ -133,17 +133,20 @@ public class ConnectionSQL {
         try {
             Connection con = SQLConnection();
             assert con != null;
-            PreparedStatement ps = con.prepareStatement("SELECT S.SCHEDULE_DATE, S.F_TEAM_NAME, S.S_TEAM_NAME, S.SCHEDULE_TIME, S.SCORE, T1.TEAM_NAME, T2.TEAM_NAME " +
-                    "FROM SCHEDULE S " +
-                    "INNER JOIN TEAMS T1 ON S.F_TEAM_NAME = T1.TEAM_SHORT_NAME " +
-                    "INNER JOIN TEAMS T2 ON S.S_TEAM_NAME = T2.TEAM_SHORT_NAME " +
+//            PreparedStatement ps = con.prepareStatement("SELECT S.SCHEDULE_DATE, S.F_TEAM_NAME, S.S_TEAM_NAME, S.SCHEDULE_TIME, S.SCORE, T1.TEAM_NAME, T2.TEAM_NAME, S.RESULT " +
+//                    "FROM SCHEDULE S " +
+//                    "INNER JOIN TEAMS T1 ON S.F_TEAM_NAME = T1.TEAM_SHORT_NAME " +
+//                    "INNER JOIN TEAMS T2 ON S.S_TEAM_NAME = T2.TEAM_SHORT_NAME " +
+//                    "WHERE YEAR(SCHEDULE_DATE) = ? AND MONTH(SCHEDULE_DATE) = ? " +
+//                    "ORDER BY SCHEDULE_DATE, SCHEDULE_TIME");
+            PreparedStatement ps = con.prepareStatement("SELECT * FROM SCHEDULE_LIST " +
                     "WHERE YEAR(SCHEDULE_DATE) = ? AND MONTH(SCHEDULE_DATE) = ? " +
                     "ORDER BY SCHEDULE_DATE, SCHEDULE_TIME");
             ps.setInt(1, year);
             ps.setInt(2, month);
             ResultSet rs = ps.executeQuery();
             while (rs.next()){
-                Schedule schedule = new Schedule(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7));
+                Schedule schedule = new Schedule(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8));
                 scheduleList.add(schedule);
             }
         }
@@ -162,7 +165,8 @@ public class ConnectionSQL {
             Connection con = SQLConnection();
             assert con != null;
             PreparedStatement ps = con.prepareStatement("SELECT CONCAT(FIRST_NAME, ' ', LAST_NAME) FULL_NAME, USER_EMAIL, IF(USER_ADMIN = 1, 'Yes', 'No') USER_ADMIN, IF(USER_STATUS = 1, 'Active', 'Inactive') USER_STATUS " +
-                    "FROM USERS WHERE USER_STATUS = ? " +
+                    "FROM USERS " +
+                    "WHERE USER_STATUS = ? " +
                     "ORDER BY FIRST_NAME");
             ps.setInt(1, userStatus);
 
@@ -221,7 +225,7 @@ public class ConnectionSQL {
         try {
             Connection con = SQLConnection();
             assert con != null;
-            PreparedStatement ps = con.prepareStatement("SELECT S.SCHEDULE_DATE, S.F_TEAM_NAME, S.S_TEAM_NAME, S.SCHEDULE_TIME, S.SCORE, T1.TEAM_NAME, T2.TEAM_NAME " +
+            PreparedStatement ps = con.prepareStatement("SELECT S.SCHEDULE_DATE, S.F_TEAM_NAME, S.S_TEAM_NAME, S.SCHEDULE_TIME, S.SCORE, T1.TEAM_NAME, T2.TEAM_NAME, S.RESULT " +
                     "FROM SCHEDULE S " +
                     "INNER JOIN TEAMS T1 ON S.F_TEAM_NAME = T1.TEAM_SHORT_NAME " +
                     "INNER JOIN TEAMS T2 ON S.S_TEAM_NAME = T2.TEAM_SHORT_NAME " +
@@ -232,7 +236,7 @@ public class ConnectionSQL {
             ps.setString(3, teamName);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                Schedule schedule = new Schedule(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7));
+                Schedule schedule = new Schedule(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8));
                 teamScheduleList.add(schedule);
             }
         }

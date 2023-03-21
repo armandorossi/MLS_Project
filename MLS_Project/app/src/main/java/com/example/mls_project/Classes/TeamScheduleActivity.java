@@ -39,7 +39,7 @@ public class TeamScheduleActivity extends AppCompatActivity {
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         binding.rvTeamScheduleItems.setLayoutManager(layoutManager);
-        RecyclerView.Adapter<ScheduleAdapter.ViewHolder> adapter = new ScheduleAdapter(this, teamScheduleList);
+        ScheduleAdapter adapter = new ScheduleAdapter(this, teamScheduleList);
         binding.rvTeamScheduleItems.setAdapter(adapter);
     }
 }

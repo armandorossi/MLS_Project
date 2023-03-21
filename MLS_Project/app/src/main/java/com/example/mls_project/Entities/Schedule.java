@@ -1,9 +1,9 @@
 package com.example.mls_project.Entities;
 
 public class Schedule {
-    private final String scheduleDate, homeTeamName, awayTeamName, scheduleTime, score, homeClubName, awayClubName;
+    private final String scheduleDate, homeTeamName, awayTeamName, scheduleTime, score, homeClubName, awayClubName, result;
 
-    public Schedule(String scheduleDate, String homeTeamName, String awayTeamName, String scheduleTime, String score, String homeCLubName, String awayClubName) {
+    public Schedule(String scheduleDate, String homeTeamName, String awayTeamName, String scheduleTime, String score, String homeCLubName, String awayClubName, String result) {
         this.scheduleDate = scheduleDate;
         this.homeTeamName = homeTeamName;
         this.awayTeamName = awayTeamName;
@@ -11,6 +11,7 @@ public class Schedule {
         this.score = score;
         this.homeClubName = homeCLubName;
         this.awayClubName = awayClubName;
+        this.result = result;
     }
 
     public String getScheduleDate() {
@@ -39,5 +40,9 @@ public class Schedule {
 
     public String getAwayClubName() {
         return awayClubName;
+    }
+
+    public String getResult() {
+        return result;
     }
 }

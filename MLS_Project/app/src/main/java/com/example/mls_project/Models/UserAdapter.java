@@ -19,27 +19,30 @@ import com.google.android.material.tabs.TabLayout;
 import java.util.List;
 import java.util.Objects;
 
-public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
-
+public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder> {
     private final Context context;
-    private final List<User> userList;
+    private List<User> userList;
     TabLayout tabLayoutUser;
 
-    public UserAdapter(Context current, List<User> userList, TabLayout tabLayoutUser) {
-        this.context = current;
+    public UserAdapter(Context context, List<User> userList, TabLayout tabLayoutUser) {
+        this.context = context;
         this.userList = userList;
         this.tabLayoutUser = tabLayoutUser;
     }
 
+    public void setUserList(List<User> userList) {
+        this.userList = userList;
+        notifyDataSetChanged();
+    }
+
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType){
-        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.user_item, viewGroup, false);
-        return new ViewHolder(v, context, tabLayoutUser);
+    public UserViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        return new UserViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.user_item, parent, false));
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull UserViewHolder holder, int position) {
         User user = userList.get(position);
         holder.fullName.setText(user.getFullName());
         holder.email.setText(user.getEmail());
@@ -64,16 +67,17 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
         return userList.size();
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public class UserViewHolder extends RecyclerView.ViewHolder {
         TextView fullName, email, admin, status;
         ImageView padlock;
-        public ViewHolder(@NonNull View itemView, Context context, TabLayout tabLayoutUser) {
+        public UserViewHolder(@NonNull View itemView) {
             super(itemView);
             fullName = itemView.findViewById(R.id.txt_user_full_name);
             email = itemView.findViewById(R.id.txt_user_email);
             admin = itemView.findViewById(R.id.txt_user_admin_nd);
             status = itemView.findViewById(R.id.txt_user_status_nd);
             padlock = itemView.findViewById(R.id.user_padlock);
+
             padlock.setOnClickListener(v -> {
                 if (padlock.getDrawable().getConstantState() == Objects.requireNonNull(ResourcesCompat.getDrawable(context.getResources(), R.drawable.padlock_closed, context.getTheme())).getConstantState()) {
                     new AlertDialog.Builder(context)

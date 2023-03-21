@@ -7,6 +7,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -26,24 +27,34 @@ public class LoginActivity extends AppCompatActivity {
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         setContentView(view);
+        SharedPreferences loginPreferences = getSharedPreferences("loginPrefs", MODE_PRIVATE);
+        SharedPreferences.Editor loginPrefsEditor = loginPreferences.edit();
+        boolean saveLogin = loginPreferences.getBoolean("saveLogin", false);
+
+        if (saveLogin) {
+            binding.edtUsername.setText(loginPreferences.getString("username", ""));
+            binding.edtPassword.setText(loginPreferences.getString("password", ""));
+            binding.chkRemember.setChecked(true);
+        }
+
+        binding.chkRemember.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                loginPrefsEditor.putBoolean("saveLogin", true);
+                loginPrefsEditor.putString("username", binding.edtUsername.getText().toString());
+                loginPrefsEditor.putString("password", binding.edtPassword.getText().toString());
+                loginPrefsEditor.apply();
+            }
+            else {
+                loginPrefsEditor.clear();
+                loginPrefsEditor.apply();
+            }
+        });
 
         binding.btnLogin.setOnClickListener((View v) -> loginAction());
 
         binding.btnRegister.setOnClickListener((View v) -> {
             Intent registerIntent = new Intent(this, RegisterActivity.class);
             startForResult.launch(registerIntent);
-        });
-
-        binding.btnAdmin.setOnClickListener((View v) -> {
-            binding.edtUsername.setText("armandorossi@hotmail.com");
-            binding.edtPassword.setText("Ar@123456");
-            binding.btnLogin.callOnClick();
-        });
-
-        binding.btnTest.setOnClickListener((View v) -> {
-            binding.edtUsername.setText("test@gmail.com");
-            binding.edtPassword.setText("Te@123456");
-            binding.btnLogin.callOnClick();
         });
     }
 
