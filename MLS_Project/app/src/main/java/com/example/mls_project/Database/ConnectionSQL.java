@@ -133,15 +133,15 @@ public class ConnectionSQL {
         try {
             Connection con = SQLConnection();
             assert con != null;
-//            PreparedStatement ps = con.prepareStatement("SELECT S.SCHEDULE_DATE, S.F_TEAM_NAME, S.S_TEAM_NAME, S.SCHEDULE_TIME, S.SCORE, T1.TEAM_NAME, T2.TEAM_NAME, S.RESULT " +
-//                    "FROM SCHEDULE S " +
-//                    "INNER JOIN TEAMS T1 ON S.F_TEAM_NAME = T1.TEAM_SHORT_NAME " +
-//                    "INNER JOIN TEAMS T2 ON S.S_TEAM_NAME = T2.TEAM_SHORT_NAME " +
-//                    "WHERE YEAR(SCHEDULE_DATE) = ? AND MONTH(SCHEDULE_DATE) = ? " +
-//                    "ORDER BY SCHEDULE_DATE, SCHEDULE_TIME");
-            PreparedStatement ps = con.prepareStatement("SELECT * FROM SCHEDULE_LIST " +
+            PreparedStatement ps = con.prepareStatement("SELECT S.SCHEDULE_DATE, S.F_TEAM_NAME, S.S_TEAM_NAME, S.SCHEDULE_TIME, S.SCORE, T1.TEAM_NAME, T2.TEAM_NAME, S.RESULT " +
+                    "FROM SCHEDULE S " +
+                    "INNER JOIN TEAMS T1 ON S.F_TEAM_NAME = T1.TEAM_SHORT_NAME " +
+                    "INNER JOIN TEAMS T2 ON S.S_TEAM_NAME = T2.TEAM_SHORT_NAME " +
                     "WHERE YEAR(SCHEDULE_DATE) = ? AND MONTH(SCHEDULE_DATE) = ? " +
                     "ORDER BY SCHEDULE_DATE, SCHEDULE_TIME");
+//            PreparedStatement ps = con.prepareStatement("SELECT * FROM SCHEDULE_LIST " +
+//                    "WHERE YEAR(SCHEDULE_DATE) = ? AND MONTH(SCHEDULE_DATE) = ? " +
+//                    "ORDER BY SCHEDULE_DATE, SCHEDULE_TIME");
             ps.setInt(1, year);
             ps.setInt(2, month);
             ResultSet rs = ps.executeQuery();
@@ -229,7 +229,7 @@ public class ConnectionSQL {
                     "FROM SCHEDULE S " +
                     "INNER JOIN TEAMS T1 ON S.F_TEAM_NAME = T1.TEAM_SHORT_NAME " +
                     "INNER JOIN TEAMS T2 ON S.S_TEAM_NAME = T2.TEAM_SHORT_NAME " +
-                    "WHERE S.SCHEDULE_DATE >= ? AND (T1.TEAM_NAME = ? OR T2.TEAM_NAME = ?) " +
+                    "WHERE S.SCHEDULE_DATE >= ? AND (T1.TEAM_SHORT_NAME = ? OR T2.TEAM_SHORT_NAME = ?) " +
                     "ORDER BY S.SCHEDULE_DATE, S.SCHEDULE_TIME");
             ps.setString(1, date);
             ps.setString(2, teamName);

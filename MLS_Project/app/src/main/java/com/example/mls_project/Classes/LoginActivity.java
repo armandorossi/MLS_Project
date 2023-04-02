@@ -69,6 +69,7 @@ public class LoginActivity extends AppCompatActivity {
                     returnString = data.getExtras().getString("returnEmail");
                 }
                 binding.edtUsername.setText(returnString);
+                binding.edtPassword.setText("");
             }
         }
     });

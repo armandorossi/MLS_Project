@@ -48,7 +48,7 @@ public class TeamAdapter extends RecyclerView.Adapter<TeamAdapter.TeamViewHolder
     @Override
     public void onBindViewHolder(@NonNull TeamViewHolder holder, int position) {
         Team team = teamList.get(position);
-        holder.txt_team_name.setText(team.getTeamName());
+        holder.txt_team_name.setText(team.getTeamShortName());
         String t1 = Normalizer.normalize(team.getTeamName().toLowerCase(Locale.ROOT).replace(" ", "_").replace(".", ""), Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
         holder.img_team.setImageResource(context.getResources().getIdentifier(t1, "drawable", context.getPackageName()));
 

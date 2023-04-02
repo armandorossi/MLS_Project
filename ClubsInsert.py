@@ -1,16 +1,21 @@
 import unicodedata
 import urllib.request
-import pyodbc
+import mysql.connector
+from mysql.connector import Error
 import selenium as selenium
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 import time
 
-# Connector to SQL Server
-conn = pyodbc.connect('Driver={SQL Server};'
-                          'Server=localhost;'
-                          'Database=mls;'
-                          'Trusted_Connection=yes;')
+try:
+    conn = mysql.connector.connect(host='sql487.main-hosting.eu',
+                                         database='u842004852_mlsproject_db',
+                                         user='u842004852_mlsproject_use',
+                                         password='vknP=j8O&a')
+    if conn.is_connected():
+        print("Connected to MySQL Server version ")
+except Error as e:
+    print("Error while connecting to MySQL", e)
 
 # Setting Chrome Driver path
 path = r'C:\\Users\\arman\\OneDrive\\Desktop\\chromedriver.exe'
