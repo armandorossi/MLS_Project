@@ -3,16 +3,24 @@ package com.example.mls_project.Models;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.mls_project.Entities.Schedule;
 import com.example.mls_project.R;
+
+import java.text.DateFormat;
 import java.text.Normalizer;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -41,7 +49,15 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.Schedu
     @Override
     public void onBindViewHolder(@NonNull ScheduleViewHolder holder, int position) {
         Schedule schedule = scheduleList.get(position);
-        holder.date.setText(schedule.getScheduleDate());
+
+        try {
+            holder.date.setText(new SimpleDateFormat("EEEE, MMMM d, yyyy").format(
+                    new SimpleDateFormat("yyyy-MM-dd").parse(schedule.getScheduleDate())));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+//        holder.date.setText(schedule.getScheduleDate());
         holder.teamOne.setText(schedule.getHomeTeamName());
         holder.teamTwo.setText(schedule.getAwayTeamName());
         //Checking if the field result is not null to set winner as green and loser as red
@@ -72,19 +88,20 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.Schedu
             holder.time.setText(schedule.getScheduleTime().substring(0, 5));
         }
         //Checking if Score is available to display, otherwise the field will not be displayed
-        if (schedule.getScore() == null) {
-            holder.txt_score.setVisibility(View.GONE);
-            holder.score.setVisibility(View.GONE);
-        }
-        else {
-            holder.txt_score.setVisibility(View.VISIBLE);
-            holder.score.setVisibility(View.VISIBLE);
-            holder.score.setText(schedule.getScore());
+        if (schedule.getScore() != null) {
+            String[] scoreSplit = schedule.getScore().split(":");
+
+            holder.teamOne.setText(schedule.getHomeTeamName() + " " + scoreSplit[0]);
+            holder.teamTwo.setText(scoreSplit[1] + " " + schedule.getAwayTeamName());
         }
         String t1 = Normalizer.normalize(schedule.getHomeClubName().toLowerCase(Locale.ROOT).replace(" ", "_").replace(".", ""), Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
         String t2 = Normalizer.normalize(schedule.getAwayClubName().toLowerCase(Locale.ROOT).replace(" ", "_").replace(".", ""), Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
         holder.imgOne.setImageResource(context.getResources().getIdentifier(t1, "drawable", context.getPackageName()));
         holder.imgTwo.setImageResource(context.getResources().getIdentifier(t2, "drawable", context.getPackageName()));
+
+        //String pred = "Home " + schedule.getHome_pct() + "\nAway  " + schedule.getAway_pct() + "\nDraw   " + schedule.getDraw_pct();
+        String pred = "Home " + schedule.getHome_pct() + " Away " + schedule.getAway_pct() + " Draw " + schedule.getDraw_pct();
+        holder.prediction.setText(pred);
     }
 
     @Override
@@ -93,7 +110,7 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.Schedu
     }
 
     public static class ScheduleViewHolder extends RecyclerView.ViewHolder {
-        TextView date, teamOne, teamTwo, time, txt_score, score, txt_prediction, prediction;
+        TextView date, teamOne, teamTwo, time, txt_prediction, prediction;
         ImageView imgOne, imgTwo;
         public ScheduleViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -101,8 +118,6 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.Schedu
             teamOne = itemView.findViewById(R.id.txt_f_team_name);
             teamTwo = itemView.findViewById(R.id.txt_s_team_name);
             time = itemView.findViewById(R.id.txt_schedule_time);
-            txt_score = itemView.findViewById(R.id.txt_score);
-            score = itemView.findViewById(R.id.txt_score_real);
             prediction = itemView.findViewById(R.id.txt_score_prediction);
             txt_prediction = itemView.findViewById(R.id.txt_prediction);
             imgOne = itemView.findViewById(R.id.img_f_team);

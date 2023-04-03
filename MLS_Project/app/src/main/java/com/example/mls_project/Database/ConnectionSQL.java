@@ -133,10 +133,11 @@ public class ConnectionSQL {
         try {
             Connection con = SQLConnection();
             assert con != null;
-            PreparedStatement ps = con.prepareStatement("SELECT S.SCHEDULE_DATE, S.F_TEAM_NAME, S.S_TEAM_NAME, S.SCHEDULE_TIME, S.SCORE, T1.TEAM_NAME, T2.TEAM_NAME, S.RESULT " +
+            PreparedStatement ps = con.prepareStatement("SELECT S.SCHEDULE_DATE, S.H_TEAM_NAME, S.A_TEAM_NAME, S.SCHEDULE_TIME, S.SCORE, T1.TEAM_NAME, T2.TEAM_NAME, S.RESULT, PRED_H_PERC, PRED_A_PERC, PRED_D_PERC " +
                     "FROM SCHEDULE S " +
-                    "INNER JOIN TEAMS T1 ON S.F_TEAM_NAME = T1.TEAM_SHORT_NAME " +
-                    "INNER JOIN TEAMS T2 ON S.S_TEAM_NAME = T2.TEAM_SHORT_NAME " +
+                    "INNER JOIN TEAMS T1 ON S.H_TEAM_NAME = T1.TEAM_SHORT_NAME " +
+                    "INNER JOIN TEAMS T2 ON S.A_TEAM_NAME = T2.TEAM_SHORT_NAME " +
+                    "LEFT JOIN MATCH_PREDICTION MP ON S.ID = MP.ID " +
                     "WHERE YEAR(SCHEDULE_DATE) = ? AND MONTH(SCHEDULE_DATE) = ? " +
                     "ORDER BY SCHEDULE_DATE, SCHEDULE_TIME");
 //            PreparedStatement ps = con.prepareStatement("SELECT * FROM SCHEDULE_LIST " +
@@ -146,7 +147,7 @@ public class ConnectionSQL {
             ps.setInt(2, month);
             ResultSet rs = ps.executeQuery();
             while (rs.next()){
-                Schedule schedule = new Schedule(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8));
+                Schedule schedule = new Schedule(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8), rs.getFloat(9), rs.getFloat(10), rs.getFloat(11));
                 scheduleList.add(schedule);
             }
         }
@@ -225,10 +226,11 @@ public class ConnectionSQL {
         try {
             Connection con = SQLConnection();
             assert con != null;
-            PreparedStatement ps = con.prepareStatement("SELECT S.SCHEDULE_DATE, S.F_TEAM_NAME, S.S_TEAM_NAME, S.SCHEDULE_TIME, S.SCORE, T1.TEAM_NAME, T2.TEAM_NAME, S.RESULT " +
+            PreparedStatement ps = con.prepareStatement("SELECT S.SCHEDULE_DATE, S.H_TEAM_NAME, S.A_TEAM_NAME, S.SCHEDULE_TIME, S.SCORE, T1.TEAM_NAME, T2.TEAM_NAME, S.RESULT, PRED_H_PERC, PRED_A_PERC, PRED_D_PERC " +
                     "FROM SCHEDULE S " +
-                    "INNER JOIN TEAMS T1 ON S.F_TEAM_NAME = T1.TEAM_SHORT_NAME " +
-                    "INNER JOIN TEAMS T2 ON S.S_TEAM_NAME = T2.TEAM_SHORT_NAME " +
+                    "INNER JOIN TEAMS T1 ON S.H_TEAM_NAME = T1.TEAM_SHORT_NAME " +
+                    "INNER JOIN TEAMS T2 ON S.A_TEAM_NAME = T2.TEAM_SHORT_NAME " +
+                    "LEFT JOIN MATCH_PREDICTION MP ON S.ID = MP.ID " +
                     "WHERE S.SCHEDULE_DATE >= ? AND (T1.TEAM_SHORT_NAME = ? OR T2.TEAM_SHORT_NAME = ?) " +
                     "ORDER BY S.SCHEDULE_DATE, S.SCHEDULE_TIME");
             ps.setString(1, date);
@@ -236,7 +238,7 @@ public class ConnectionSQL {
             ps.setString(3, teamName);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                Schedule schedule = new Schedule(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8));
+                Schedule schedule = new Schedule(rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8), rs.getFloat(9), rs.getFloat(10), rs.getFloat(11));
                 teamScheduleList.add(schedule);
             }
         }
