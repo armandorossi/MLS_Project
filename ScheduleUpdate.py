@@ -5,6 +5,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 import mysql.connector
 from mysql.connector import Error
+import sys
 
 try:
     conn = mysql.connector.connect(host='sql487.main-hosting.eu',
@@ -21,6 +22,7 @@ try:
         conn.close()
 except Error as e:
     print("Error while connecting to MySQL", e)
+    sys.exit(0)
 
 # Setting Chrome Driver path
 path = r'C:\\Users\\arman\\OneDrive\\Desktop\\chromedriver.exe'
@@ -63,7 +65,7 @@ for x in range(len(Lines)):
 
     if Score == 'v':
         try:
-            Insert = "INSERT INTO SCHEDULE (SCHEDULE_DATE, F_TEAM_NAME, S_TEAM_NAME, SCHEDULE_TIME) VALUES ('" + \
+            Insert = "INSERT INTO SCHEDULE (SCHEDULE_DATE, H_TEAM_NAME, A_TEAM_NAME, SCHEDULE_TIME) VALUES ('" + \
                      datetime.strptime(dataIn, "%Y%m%d").date().strftime('%Y-%m-%d') + "','" + Team1 + "','" + \
                      Team2 + "','" + Time[0].text + "');"
             with open('ScheduleUpdate.txt', 'a') as f:
@@ -75,8 +77,8 @@ for x in range(len(Lines)):
     else:
         try:
             Update = "UPDATE SCHEDULE S " + \
-                     "INNER JOIN TEAMS T1 ON S.F_TEAM_NAME = T1.TEAM_SHORT_NAME AND T1.TEAM_ESPN = '" + \
-                     Team1 + "' INNER JOIN TEAMS T2 ON S.S_TEAM_NAME = T2.TEAM_SHORT_NAME AND T2.TEAM_ESPN = '" + \
+                     "INNER JOIN TEAMS T1 ON S.H_TEAM_NAME = T1.TEAM_SHORT_NAME AND T1.TEAM_ESPN = '" + \
+                     Team1 + "' INNER JOIN TEAMS T2 ON S.A_TEAM_NAME = T2.TEAM_SHORT_NAME AND T2.TEAM_ESPN = '" + \
                      Team2 + "' SET S.SCORE = '" + Score + "' WHERE S.SCHEDULE_DATE = '" + \
                      datetime.strptime(dataIn, "%Y%m%d").date().strftime('%Y-%m-%d') + "';"
             with open('ScheduleUpdate.txt', 'a') as f:
@@ -101,6 +103,6 @@ try:
         conn.commit()
         cursor.close()
         conn.close()
-except:
-    print("Error while connecting or inserting data into MySQL")
+except Error as e:
+    print("Error while connecting or inserting data into MySQL > " + e.msg)
     conn.rollback()

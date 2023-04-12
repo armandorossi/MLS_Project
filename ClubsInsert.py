@@ -46,8 +46,8 @@ cursor = conn.cursor()
 for x in range(len(ClubNames)):
     try:
         Picture = Images[x].get_attribute("src")
-        n = unicodedata.normalize('NFD', ClubNames[x].text.lower().replace(" ", "_").replace(".", "")).encode('ascii', 'ignore').decode("utf-8")
-        urllib.request.urlretrieve(Picture, "ClubPictures\\" + n + ".png")
+        cName = unicodedata.normalize('NFD', ClubNames[x].text.lower().replace(" ", "_").replace(".", "")).encode('ascii', 'ignore').decode("utf-8")
+        urllib.request.urlretrieve(Picture, "ClubPictures\\" + cName + ".png")
     except:
         print("Error during image saving")
     try:
